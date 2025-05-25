@@ -59,12 +59,12 @@
   color: orange;
 }
 
-.newsfeed_popularlists_badges {
+.newsfeed__popularlists__badges {
   display: flex;
   flex-wrap: wrap;
 }
 
-.newsfeed_popularlists_badges .topic__badge {
+.newsfeed__popularlists__badges .topic__badge {
   border: 1px solid #31363A;
   background-color: transparent;
   color: white;

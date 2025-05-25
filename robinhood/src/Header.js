@@ -12,7 +12,7 @@ function Header() {
         {/* search bar */}
         <div className='header__search'>
             <div className='header__searchContainer'>
-                <input placeholder='Search' type='text'/>
+                <input placeholder='Search for stocks' type='text'/>
             </div>
         </div>
         {/* menu items */}
