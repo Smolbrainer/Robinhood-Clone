@@ -1,0 +1,89 @@
+/* StockPage.css */
+.stockPage {
+  display: flex;
+  gap: 24px;
+  padding: 20px;
+  background: #14171A;
+  color: #fff;
+}
+.leftPanel {
+  flex: 2;
+}
+.rightPanel {
+  flex: 1;
+}
+
+/* Back link & title */
+.backLink a {
+  color: #5AC53B;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.symbolTitle {
+  margin: 8px 0;
+  font-size: 2rem;
+}
+
+/* Chart */
+.chartWrapper {
+  width: 100%;
+  height: 250px;
+  margin: 12px 0;
+}
+.percentage {
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+/* About card */
+.aboutCard {
+  background: #1E2428;
+  padding: 16px;
+  border-radius: 6px;
+  margin-top: 20px;
+}
+.aboutCard h3 {
+  margin-bottom: 8px;
+}
+.aboutCard ul {
+  list-style: none;
+  padding: 0;
+}
+.aboutCard li {
+  margin-bottom: 4px;
+}
+
+/* Buy card */
+.buyCard {
+  background: #1E2428;
+  padding: 20px;
+  border-radius: 6px;
+}
+.buyCard h3 {
+  margin-bottom: 12px;
+}
+.buyCard form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.buyCard input {
+  width: 100%;
+  padding: 6px;
+  border-radius: 4px;
+  border: 1px solid #3A3F44;
+  background: #25292C;
+  color: #fff;
+}
+.buyCard button {
+  padding: 8px;
+  background: #5AC53B;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.buyCard button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

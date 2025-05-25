@@ -1,19 +1,23 @@
+// TimeLine.js
 import React from 'react'
 import './TimeLine.css'
 
-function TimeLine() {
+const OPTIONS = ['LIVE', '1D', '1W', '3M', '1Y', 'ALL']
+
+export default function TimeLine({ range, setRange }) {
   return (
-        <div className="timeline__container">
-            <div className="timeline__buttons__container">
-                <div className="timeline__button">LIVE</div>
-                <div className="timeline__button">1D</div>
-                <div className="timeline__button active">1W</div>
-                <div className="timeline__button">3M</div>
-                <div className="timeline__button">1Y</div>
-                <div className="timeline__button">ALL</div>                                                                                
-            </div>
-        </div>
+    <div className="timeline__container">
+      <div className="timeline__buttons__container">
+        {OPTIONS.map(opt => (
+          <div
+            key={opt}
+            className={`timeline__button${range === opt ? ' active' : ''}`}
+            onClick={() => setRange(opt)}
+          >
+            {opt}
+          </div>
+        ))}
+      </div>
+    </div>
   )
 }
-
-export default TimeLine

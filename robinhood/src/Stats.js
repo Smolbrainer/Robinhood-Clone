@@ -45,7 +45,7 @@ export default function Stats() {
     getMyStocks();
 
     // fetch a predefined list of symbols
-    const symbols = ["AAPL", "MSFT", "TSLA", "META", "BABA", "UBER", "DIS", "SBUX"];
+    const symbols = ["AAPL", "MSFT"];
     const promises = [];
     const tempStocks = [];
 
@@ -80,6 +80,7 @@ export default function Stats() {
                 openPrice={stock.info.o}
                 volume={stock.data.shares}
                 price={stock.info.c}
+                shares={stock.data.shares}
               />
             ))}
           </div>

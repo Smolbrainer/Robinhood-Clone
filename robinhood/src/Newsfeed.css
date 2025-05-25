@@ -13,6 +13,10 @@
 
 .newsfeed__chart__section {
 }
+.newsfeed__chart{
+  margin-bottom: 50px;
+}
+
 .newsfeed__buying__section {
   padding: 20px 0px 20px 0px;
   display: flex;

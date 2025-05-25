@@ -66,3 +66,41 @@
 a:first-of-type {
   color: #5AC53B;
 }
+
+.header__search {
+  position: relative;
+  width: 400px; 
+}
+
+
+.searchDropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: #25292C;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  border-radius: 4px;
+  max-height: 260px;
+  overflow-y: auto;
+  z-index: 100;
+  padding: 0;
+  list-style: none;
+}
+
+.searchDropdown li {
+  padding: 8px 12px;
+  color: #fff;
+  border-bottom: 1px solid #3A3F44;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.searchDropdown li:hover {
+  background: rgba(90, 197, 59, 0.1);
+  color: #5AC53B;
+}
+
+.searchDropdown li:last-child {
+  border-bottom: none;
+}
