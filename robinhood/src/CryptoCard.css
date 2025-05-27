@@ -1,0 +1,51 @@
+.cryptoCard {
+  background: #1a1a1a;
+  border-radius: 8px;
+  padding: 16px;
+  min-width: 200px;
+  transition: transform 0.2s ease;
+}
+
+.cryptoCard:hover {
+  transform: translateY(-2px);
+}
+
+.cryptoCard__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.cryptoCard__symbol {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.cryptoCard__change {
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.cryptoCard__change.positive {
+  color: #5AC53B;
+  background: rgba(90, 197, 59, 0.1);
+}
+
+.cryptoCard__change.negative {
+  color: #FF4D4D;
+  background: rgba(255, 77, 77, 0.1);
+}
+
+.cryptoCard__price {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.cryptoCard__volume {
+  font-size: 0.9rem;
+  color: #888;
+} 

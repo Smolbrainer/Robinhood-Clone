@@ -1,0 +1,294 @@
+.cryptoPage {
+  background: #000;
+  color: #fff;
+  min-height: calc(100vh - 60px);
+  padding: 24px;
+}
+
+.cryptoPage__loading,
+.cryptoPage__error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 60px);
+  font-size: 1.2rem;
+  color: #888;
+}
+
+.cryptoPage__error {
+  color: #FF4B4B;
+}
+
+.cryptoPage__header {
+  margin-bottom: 24px;
+}
+
+.cryptoPage__title {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.cryptoPage__title h1 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.cryptoPage__symbol {
+  font-size: 1.2rem;
+  color: #888;
+}
+
+.cryptoPage__price {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.cryptoPage__price h2 {
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.cryptoPage__change {
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.cryptoPage__change.positive {
+  color: #5AC53B;
+}
+
+.cryptoPage__change.negative {
+  color: #FF4B4B;
+}
+
+.cryptoPage__chart {
+  background: #1a1a1a;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.cryptoPage__chartWrapper {
+  height: 400px;
+  position: relative;
+}
+
+.cryptoPage__stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 24px;
+  background: #1a1a1a;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.cryptoPage__stat {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cryptoPage__statLabel {
+  font-size: 0.9rem;
+  color: #888;
+}
+
+.cryptoPage__statValue {
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.cryptoPage__content {
+  display: flex;
+  gap: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.cryptoPage__left {
+  flex: 1;
+  min-width: 0;
+}
+
+.cryptoPage__right {
+  width: 400px;
+  flex-shrink: 0;
+}
+
+.cryptoPage__orderPanel {
+  background: #1a1a1a;
+  border-radius: 12px;
+  padding: 24px;
+  position: sticky;
+  top: 24px;
+}
+
+.cryptoPage__orderTabs {
+  display: flex;
+  gap: 1px;
+  background: #333;
+  border-radius: 8px;
+  padding: 4px;
+  margin-bottom: 24px;
+}
+
+.cryptoPage__orderTab {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  background: transparent;
+  color: #888;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.cryptoPage__orderTab.active {
+  background: #333;
+  color: #fff;
+}
+
+.cryptoPage__orderForm {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.cryptoPage__orderInput {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cryptoPage__orderInput label {
+  font-size: 0.9rem;
+  color: #888;
+}
+
+.cryptoPage__orderInputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.cryptoPage__orderInputPrefix {
+  position: absolute;
+  left: 12px;
+  color: #888;
+}
+
+.cryptoPage__orderInputWrapper input {
+  width: 100%;
+  padding: 12px 12px 12px 24px;
+  background: #333;
+  border: 1px solid #444;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 1.1rem;
+}
+
+.cryptoPage__orderInputWrapper input:focus {
+  outline: none;
+  border-color: #5AC53B;
+}
+
+.cryptoPage__orderSummary {
+  background: #333;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.cryptoPage__orderSummaryRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.cryptoPage__orderSummaryRow:not(:last-child) {
+  border-bottom: 1px solid #444;
+}
+
+.cryptoPage__orderError {
+  color: #FF4B4B;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.cryptoPage__orderSuccess {
+  color: #5AC53B;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.cryptoPage__orderButton {
+  padding: 16px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cryptoPage__orderButton.buy {
+  background: #5AC53B;
+  color: #fff;
+}
+
+.cryptoPage__orderButton.sell {
+  background: #FF4B4B;
+  color: #fff;
+}
+
+.cryptoPage__orderButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.cryptoPage__orderButton:not(:disabled):hover {
+  opacity: 0.9;
+}
+
+@media (max-width: 1024px) {
+  .cryptoPage__content {
+    flex-direction: column;
+  }
+
+  .cryptoPage__right {
+    width: 100%;
+  }
+
+  .cryptoPage__orderPanel {
+    position: static;
+  }
+}
+
+@media (max-width: 768px) {
+  .cryptoPage {
+    padding: 16px;
+  }
+
+  .cryptoPage__title h1 {
+    font-size: 1.5rem;
+  }
+
+  .cryptoPage__price h2 {
+    font-size: 2rem;
+  }
+
+  .cryptoPage__chartWrapper {
+    height: 300px;
+  }
+
+  .cryptoPage__stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+} 

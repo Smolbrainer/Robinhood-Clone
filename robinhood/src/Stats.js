@@ -1,108 +1,128 @@
 // Stats.js
 import React, { useState, useEffect } from "react";
 import "./Stats.css";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import StatsRow from "./StatsRow";
-import axios from "axios";
-import { db } from "./firebase";
-import { collection, onSnapshot } from "firebase/firestore";
+import { useAuth } from "./AuthContext";
+import { getUserPortfolio } from "./userData";
 
-const BASE_URL = "https://finnhub.io/api/v1/quote?symbol=";
-const KEY_URL = `&token=${process.env.REACT_APP_FINNHUB_API_KEY}`;
+const FMP_KEY = process.env.REACT_APP_FMP_KEY || "X5t0qm3ru74kZNRha7rSywlO8At81XrG";
+
+// Popular stocks to track
+const POPULAR_STOCKS = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'TSLA', 'META', 'NVDA', 'AMD', 'NFLX', 'DIS'];
 
 export default function Stats() {
   const [stocksData, setStocksData] = useState([]);
-  const [myStocks, setMyStocks] = useState([]);
-
-  // helper to fetch quote data for a given symbol
-  const getStocksData = (symbol) => axios.get(`${BASE_URL}${symbol}${KEY_URL}`);
-
-  // load user-saved stocks from Firestore (modular API)
-  const getMyStocks = () => {
-    const myStocksRef = collection(db, 'myStocks');
-    onSnapshot(myStocksRef, (snapshot) => {
-      const promises = [];
-      const tempData = [];
-
-      snapshot.docs.forEach((doc) => {
-        const ticker = doc.data().ticker;
-        promises.push(
-          getStocksData(ticker).then((res) => {
-            tempData.push({
-              id: doc.id,
-              data: doc.data(),
-              info: res.data,
-            });
-          })
-        );
-      });
-
-      Promise.all(promises).then(() => setMyStocks(tempData));
-    });
-  };
+  const [portfolio, setPortfolio] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const { currentUser } = useAuth();
 
   useEffect(() => {
-    getMyStocks();
+    async function loadData() {
+      if (!currentUser) return;
 
-    // fetch a predefined list of symbols
-    const symbols = ["AAPL", "MSFT"];
-    const promises = [];
-    const tempStocks = [];
+      try {
+        setLoading(true);
+        // Load user's portfolio
+        const userPortfolio = await getUserPortfolio(currentUser.uid);
+        setPortfolio(userPortfolio);
 
-    symbols.forEach((sym) => {
-      promises.push(
-        getStocksData(sym).then((res) => {
-          tempStocks.push({ name: sym, ...res.data });
-        })
-      );
-    });
+        // Fetch quotes for all stocks
+        const symbols = [
+          ...(userPortfolio?.stocks?.map(s => s.symbol) || []),
+          ...(userPortfolio?.watchlist || []),
+          ...POPULAR_STOCKS
+        ].filter((value, index, self) => self.indexOf(value) === index);
 
-    Promise.all(promises)
-      .then(() => setStocksData(tempStocks))
-      .catch((err) => console.error("Failed to load stock list:", err));
-  }, []);
+        const response = await fetch(
+          `https://financialmodelingprep.com/api/v3/quote/${symbols.join(',')}?apikey=${FMP_KEY}`
+        );
+        const quotes = await response.json();
+        const quotesMap = quotes.reduce((acc, quote) => {
+          acc[quote.symbol] = quote;
+          return acc;
+        }, {});
+
+        // My Stocks (owned)
+        let myStocks = [];
+        if (userPortfolio?.stocks?.length > 0) {
+          myStocks = userPortfolio.stocks.map(holding => {
+            const quote = quotesMap[holding.symbol] || {};
+            return {
+              name: holding.symbol,
+              shares: holding.shares,
+              o: quote.open || 0,
+              c: quote.price || 0,
+              change: quote.changesPercentage || 0
+            };
+          }).filter(stock => stock.shares > 0);
+        }
+
+        // Wishlist (watchlist, not already owned)
+        let wishlist = [];
+        if (userPortfolio?.watchlist?.length > 0) {
+          wishlist = userPortfolio.watchlist
+            .filter(symbol => !myStocks.find(s => s.name === symbol))
+            .map(symbol => {
+              const quote = quotesMap[symbol] || {};
+              return {
+                name: symbol,
+                shares: 0,
+                o: quote.open || 0,
+                c: quote.price || 0,
+                change: quote.changesPercentage || 0
+              };
+            });
+        }
+
+        setStocksData({ myStocks, wishlist });
+      } catch (error) {
+        console.error('Error loading data:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadData();
+    // Refresh data every 30 seconds
+    const interval = setInterval(loadData, 30000);
+    return () => clearInterval(interval);
+  }, [currentUser]);
+
+  if (loading) {
+    return <div className="stats">Loading...</div>;
+  }
 
   return (
     <div className="stats">
       <div className="stats__container">
-
-        {/* Top: User's personal watchlist */}
-        <div className="stats__header">
-          <p>Stocks</p>
-          <MoreHorizIcon />
+        <h2>My Stocks</h2>
+        <div className="stats__rows">
+          {stocksData.myStocks.length === 0 && <p>No stocks owned yet.</p>}
+          {stocksData.myStocks.map((stock) => (
+            <StatsRow
+              key={stock.name}
+              symbol={stock.name}
+              openPrice={stock.o}
+              price={stock.c}
+              shares={stock.shares}
+              change={stock.change}
+            />
+          ))}
         </div>
-        <div className="stats__content">
-          <div className="stats__rows">
-            {myStocks.map((stock) => (
-              <StatsRow
-                key={stock.id}
-                symbol={stock.data.ticker}
-                openPrice={stock.info.o}
-                volume={stock.data.shares}
-                price={stock.info.c}
-                shares={stock.data.shares}
-              />
-            ))}
-          </div>
+        <h2 style={{marginTop: '2em'}}>My Wishlist</h2>
+        <div className="stats__rows">
+          {stocksData.wishlist.length === 0 && <p>No stocks in wishlist.</p>}
+          {stocksData.wishlist.map((stock) => (
+            <StatsRow
+              key={stock.name}
+              symbol={stock.name}
+              openPrice={stock.o}
+              price={stock.c}
+              shares={stock.shares}
+              change={stock.change}
+            />
+          ))}
         </div>
-
-        {/* Bottom: Predefined list */}
-        <div className="stats__header stats-lists">
-          <p>Lists</p>
-        </div>
-        <div className="stats__content">
-          <div className="stats__rows">
-            {stocksData.map((stock) => (
-              <StatsRow
-                key={stock.name}
-                symbol={stock.name}
-                openPrice={stock.o}
-                price={stock.c}
-              />
-            ))}
-          </div>
-        </div>
-
       </div>
     </div>
   );

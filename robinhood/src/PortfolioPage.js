@@ -1,123 +1,117 @@
 // PortfolioPage.js
 import React, { useState, useEffect } from 'react'
 import Header from './Header'
-import { collection, getDocs } from 'firebase/firestore'
-import { db } from './firebase'
 import { useNavigate } from 'react-router-dom'
 import './PortfolioPage.css'
+import { useAuth } from './AuthContext'
+import { getUserPortfolio } from './userData'
 
 const FMP_KEY = process.env.REACT_APP_FMP_KEY || 'X5t0qm3ru74kZNRha7rSywlO8At81XrG'
 
 export default function PortfolioPage() {
   const [holdings, setHoldings] = useState([])
   const [loading, setLoading] = useState(true)
+  const [portfolio, setPortfolio] = useState(null)
   const navigate = useNavigate()
+  const { currentUser } = useAuth()
 
   useEffect(() => {
     async function loadPortfolio() {
-      // 1) load your stocks from Firestore
-      const snap = await getDocs(collection(db, 'myStocks'))
-      const stocks = snap.docs.map(d => ({
-        ticker: d.data().ticker,
-        shares: parseFloat(d.data().shares),
-      }))
-      if (stocks.length === 0) {
-        setHoldings([])
-        setLoading(false)
-        return
+      if (!currentUser) {
+        console.log('No current user, skipping portfolio load');
+        return;
       }
 
-      // helper: try Yahoo first, otherwise FMP
-      async function fetchQuotes(symbols) {
-        const yahooUrl = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${symbols}`
-        try {
-          const r = await fetch(yahooUrl)
-          if (!r.ok) throw new Error('Yahoo failed')
-          const j = await r.json()
-          return j.quoteResponse.result
-        } catch {
-          // fallback to Financial Modeling Prep
-          return Promise.all(
-            symbols.split(',').map(async sym => {
-              const r2 = await fetch(
-                `https://financialmodelingprep.com/api/v3/quote/${sym}?apikey=${FMP_KEY}`
-              )
-              const [q] = await r2.json()
-              return {
-                symbol: q.symbol,
-                regularMarketPrice: q.price,
-                regularMarketPreviousClose: q.previousClose,
-              }
-            })
-          )
+      try {
+        console.log('Loading portfolio for user:', currentUser.uid);
+        // Load user's portfolio from Firestore
+        const userPortfolio = await getUserPortfolio(currentUser.uid);
+        console.log('Loaded portfolio:', userPortfolio);
+        setPortfolio(userPortfolio);
+
+        if (!userPortfolio || !userPortfolio.stocks || userPortfolio.stocks.length === 0) {
+          console.log('No stocks in portfolio');
+          setHoldings([]);
+          setLoading(false);
+          return;
         }
+
+        // Fetch real-time prices for all stocks in portfolio
+        const symbols = userPortfolio.stocks.map(stock => stock.symbol).join(',');
+        const response = await fetch(`https://financialmodelingprep.com/api/v3/quote/${symbols}?apikey=${FMP_KEY}`);
+        const priceData = await response.json();
+
+        // Create a map of current prices
+        const currentPrices = {};
+        priceData.forEach(stock => {
+          currentPrices[stock.symbol] = stock.price;
+        });
+
+        // Merge real-time price data into holdings
+        const enriched = userPortfolio.stocks.map(h => {
+          const current = currentPrices[h.symbol] || 0;
+          return {
+            ticker: h.symbol,
+            shares: h.shares,
+            averagePrice: h.averagePrice,
+            current,
+            value: h.shares * current,
+            gain: h.shares * (current - h.averagePrice),
+            gainPercent: ((current - h.averagePrice) / h.averagePrice) * 100
+          }
+        });
+
+        console.log('Enriched holdings:', enriched);
+        setHoldings(enriched);
+      } catch (error) {
+        console.error('Error loading portfolio:', error);
       }
-
-      // 2) batch-request all tickers
-      const symbols = stocks.map(h => h.ticker).join(',')
-      const quotes = await fetchQuotes(symbols)
-
-      // 3) merge quote data into your holdings
-      const enriched = stocks.map(h => {
-        const q = quotes.find(r => r.symbol === h.ticker) || {}
-        const current = q.regularMarketPrice ?? 0
-        const prevClose = q.regularMarketPreviousClose ?? current
-        const pctChange = prevClose
-          ? ((current - prevClose) / prevClose) * 100
-          : 0
-        return {
-          ...h,
-          current,
-          prevClose,
-          pctChange,
-          value: h.shares * current,
-        }
-      })
-
-      setHoldings(enriched)
-      setLoading(false)
+      setLoading(false);
     }
 
-    loadPortfolio()
-  }, [])
+    loadPortfolio();
+    // Refresh portfolio data every 30 seconds
+    const interval = setInterval(loadPortfolio, 30000);
+    return () => clearInterval(interval);
+  }, [currentUser]);
 
   if (loading) {
     return (
-      <>
-        <div className="portfolioPage">Loading your portfolio…</div>
-      </>
-    )
+      <div className="portfolioPage">
+        <div className="loading">Loading your portfolio…</div>
+      </div>
+    );
   }
 
-  // calculate totals
-  const totalValue = holdings.reduce((sum, h) => sum + h.value, 0)
-  const totalGain = holdings.reduce(
-    (sum, h) => sum + h.shares * (h.current - h.prevClose),
-    0
-  )
-  const totalPct =
-    totalValue > 0 ? (totalGain / (totalValue - totalGain)) * 100 : 0
+  // Calculate totals
+  const totalValue = holdings.reduce((sum, h) => sum + h.value, 0) + (portfolio?.cash || 0);
+  const totalGain = holdings.reduce((sum, h) => sum + h.gain, 0);
+  const totalPct = holdings.length > 0 
+    ? (totalGain / (totalValue - totalGain)) * 100 
+    : 0;
 
   return (
-    <>
-      <div className="portfolioPage">
-        <div className="portfolioSummary">
-          <h2>Portfolio Value</h2>
-          <p className="totalValue">${totalValue.toFixed(2)}</p>
-          <p className={'totalChange ' + (totalGain >= 0 ? 'positive' : 'negative')}>
-            {totalGain >= 0 ? '+' : ''}
-            ${totalGain.toFixed(2)} ({totalPct.toFixed(2)}%)
-          </p>
-        </div>
+    <div className="portfolioPage">
+      <div className="portfolioSummary">
+        <h2>Portfolio Value</h2>
+        <p className="totalValue">${totalValue.toFixed(2)}</p>
+        <p className={'totalChange ' + (totalGain >= 0 ? 'positive' : 'negative')}>
+          {totalGain >= 0 ? '+' : ''}
+          ${totalGain.toFixed(2)} ({totalPct.toFixed(2)}%)
+        </p>
+        <p className="cashBalance">Cash Balance: ${portfolio?.cash?.toFixed(2) || '0.00'}</p>
+      </div>
 
+      {holdings.length > 0 ? (
         <table className="holdingsTable">
           <thead>
             <tr>
               <th>Ticker</th>
               <th>Shares</th>
-              <th>Price</th>
+              <th>Avg. Price</th>
+              <th>Current</th>
               <th>Value</th>
-              <th>Day %Δ</th>
+              <th>Gain/Loss</th>
             </tr>
           </thead>
           <tbody>
@@ -129,17 +123,23 @@ export default function PortfolioPage() {
               >
                 <td>{h.ticker}</td>
                 <td>{h.shares}</td>
+                <td>${h.averagePrice.toFixed(2)}</td>
                 <td>${h.current.toFixed(2)}</td>
                 <td>${h.value.toFixed(2)}</td>
-                <td className={h.pctChange >= 0 ? 'positive' : 'negative'}>
-                  {h.pctChange >= 0 ? '+' : ''}
-                  {h.pctChange.toFixed(2)}%
+                <td className={h.gain >= 0 ? 'positive' : 'negative'}>
+                  {h.gain >= 0 ? '+' : ''}
+                  ${h.gain.toFixed(2)} ({h.gainPercent.toFixed(2)}%)
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-      </div>
-    </>
-  )
+      ) : (
+        <div className="noHoldings">
+          <p>You don't have any stocks in your portfolio yet.</p>
+          <button onClick={() => navigate('/')}>Start Trading</button>
+        </div>
+      )}
+    </div>
+  );
 }

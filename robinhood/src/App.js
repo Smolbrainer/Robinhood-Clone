@@ -7,6 +7,11 @@ import React from "react";
 import PortfolioPage from "./PortfolioPage"; 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import StockPage from "./StockPage";
+import { AuthProvider } from "./AuthContext";
+import PrivateRoute from "./PrivateRoute";
+import Login from "./Login";
+import SignUp from "./SignUp";
+import CryptoPage from './CryptoPage'
 
 function Home() {
   return (
@@ -20,21 +25,56 @@ function Home() {
 export default function App() {
   return (
     <BrowserRouter>
-      <div className="app">
-        <div className="app__header">
-          <Header />
+      <AuthProvider>
+        <div className="app">
+          <div className="app__header">
+            <Header />
+          </div>
+
+          <div className="app__body">
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<SignUp />} />
+              
+              <Route
+                path="/"
+                element={
+                  <PrivateRoute>
+                    <Home />
+                  </PrivateRoute>
+                }
+              />
+
+              <Route
+                path="/stock/:symbol"
+                element={
+                  <PrivateRoute>
+                    <StockPage />
+                  </PrivateRoute>
+                }
+              />
+
+              <Route
+                path="/crypto/:symbol"
+                element={
+                  <PrivateRoute>
+                    <CryptoPage />
+                  </PrivateRoute>
+                }
+              />
+
+              <Route
+                path="/portfolio"
+                element={
+                  <PrivateRoute>
+                    <PortfolioPage />
+                  </PrivateRoute>
+                }
+              />
+            </Routes>
+          </div>
         </div>
-
-        <div className="app__body">
-          <Routes>
-            <Route path="/" element={<Home />} />
-
-            <Route path="/stock/:symbol" element={<StockPage />} />
-
-            <Route path="/portfolio" element={<PortfolioPage />} />
-          </Routes>
-        </div>
-      </div>
+      </AuthProvider>
     </BrowserRouter>
   );
 }
