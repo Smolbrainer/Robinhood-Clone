@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chart Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
+    <style>
+        body {
+            background: #000;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            padding: 20px;
+        }
+        .chart-container {
+            width: 800px;
+            height: 400px;
+            background: #111;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chart.js Test with AI Predictions</h1>
+    <div class="chart-container">
+        <canvas id="testChart"></canvas>
+    </div>
+
+    <script>
+        // Sample data
+        const now = new Date();
+        const historicalData = [];
+        const predictionData = [];
+        
+        // Generate historical data (last 30 days)
+        for (let i = 30; i >= 0; i--) {
+            const date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
+            const price = 200 + Math.sin(i * 0.1) * 10 + Math.random() * 5;
+            historicalData.push({
+                x: date,
+                y: price
+            });
+        }
+        
+        // Generate prediction data (next 30 days)
+        const lastPrice = historicalData[historicalData.length - 1].y;
+        for (let i = 1; i <= 30; i++) {
+            const date = new Date(now.getTime() + i * 24 * 60 * 60 * 1000);
+            const price = lastPrice + Math.sin(i * 0.1) * 8 + i * 0.5;
+            predictionData.push({
+                x: date,
+                y: price
+            });
+        }
+
+        Chart.register(
+            Chart.CategoryScale,
+            Chart.LinearScale,
+            Chart.TimeScale,
+            Chart.PointElement,
+            Chart.LineElement,
+            Chart.Title,
+            Chart.Tooltip,
+            Chart.Legend,
+            window['chartjs-plugin-zoom']
+        );
+
+        const ctx = document.getElementById('testChart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                datasets: [
+                    {
+                        label: 'Historical Price',
+                        data: historicalData,
+                        borderColor: '#5AC53B',
+                        backgroundColor: 'rgba(90, 197, 59, 0.1)',
+                        fill: false,
+                        pointRadius: 0,
+                        pointHoverRadius: 6,
+                        borderWidth: 2
+                    },
+                    {
+                        label: 'AI Prediction',
+                        data: predictionData,
+                        borderColor: '#ff6b6b',
+                        backgroundColor: 'rgba(255, 107, 107, 0.1)',
+                        borderDash: [5, 5],
+                        fill: false,
+                        pointRadius: 0,
+                        pointHoverRadius: 6,
+                        borderWidth: 2
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: {
+                            color: '#fff',
+                            usePointStyle: true
+                        }
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                        backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                        titleColor: '#fff',
+                        bodyColor: '#fff',
+                        borderColor: '#5AC53B',
+                        borderWidth: 1
+                    },
+                    zoom: {
+                        zoom: {
+                            wheel: { enabled: true },
+                            pinch: { enabled: true },
+                            mode: 'x'
+                        },
+                        pan: {
+                            enabled: true,
+                            mode: 'x'
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        type: 'time',
+                        time: {
+                            unit: 'day',
+                            tooltipFormat: 'MMM d, yyyy'
+                        },
+                        grid: {
+                            display: true,
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        },
+                        ticks: {
+                            color: '#888'
+                        }
+                    },
+                    y: {
+                        grid: {
+                            display: true,
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        },
+                        ticks: {
+                            color: '#888',
+                            callback: function(value) {
+                                return '$' + value.toFixed(0);
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Add reset button
+        const resetBtn = document.createElement('button');
+        resetBtn.textContent = 'Reset Zoom';
+        resetBtn.style.cssText = `
+            background: #5AC53B;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 10px;
+        `;
+        resetBtn.onclick = () => chart.resetZoom();
+        document.body.appendChild(resetBtn);
+
+        console.log('Chart initialized with zoom/pan functionality');
+    </script>
+</body>
+</html> 

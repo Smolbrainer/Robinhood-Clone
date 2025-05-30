@@ -59,6 +59,84 @@
   border-radius: 12px;
   padding: 20px;
   border: 1px solid #333;
+  display: flex;
+  flex-direction: column;
+}
+
+.chartControls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.chartButtons {
+  display: flex;
+  gap: 8px;
+}
+
+.chartBtn {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: "'Inter', sans-serif";
+}
+
+.chartBtn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: #5AC53B;
+}
+
+.chartBtn.active {
+  background: #5AC53B;
+  border-color: #5AC53B;
+  color: #000;
+  font-weight: 600;
+}
+
+.chartInfo {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.chartLabel {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #888;
+}
+
+.chartLabel.historical {
+  color: #5AC53B;
+}
+
+.chartLabel.prediction {
+  color: #ff6b6b;
+}
+
+.chartLabel.upper {
+  color: #ffa500;
+}
+
+.chartLabel.lower {
+  color: #87ceeb;
+}
+
+.chartLabel.confidence {
+  color: rgba(255, 107, 107, 0.6);
+}
+
+.chartContainer {
+  flex: 1;
+  position: relative;
+  min-height: 320px;
 }
 
 .percentage {
@@ -379,6 +457,33 @@ button:disabled {
   .predictionDisclaimer p {
     font-size: 0.75rem;
   }
+
+  /* Mobile Chart Controls */
+  .chartControls {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  .chartButtons {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .chartBtn {
+    padding: 8px 12px;
+    font-size: 0.75rem;
+  }
+
+  .chartInfo {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .chartContainer {
+    min-height: 280px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -393,6 +498,15 @@ button:disabled {
   .predictionToggle {
     padding: 12px 16px;
     font-size: 0.85rem;
+  }
+
+  .chartButtons {
+    gap: 6px;
+  }
+
+  .chartBtn {
+    padding: 6px 10px;
+    font-size: 0.7rem;
   }
 }
 
@@ -566,6 +680,22 @@ button:disabled {
   font-size: 1.1rem;
   font-weight: 600;
   color: #fff;
+}
+
+.modelMetrics {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modelMetrics h4 {
+  margin: 0 0 16px 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .indicatorGrid {

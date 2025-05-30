@@ -2,7 +2,7 @@
     background-color: white;
 }
 
-/* LineGraph.css - Enhanced with Prediction Controls */
+/* LineGraph.css - Clean Portfolio Chart */
 .lineGraphContainer {
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(10px);
@@ -11,114 +11,6 @@
   padding: 20px;
   margin: 20px 0;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-}
-
-.lineGraphHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.predictionControls {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.predictionToggle {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border: none;
-  padding: 12px 20px;
-  border-radius: 12px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-}
-
-.predictionToggle:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-}
-
-.predictionToggle.active {
-  background: linear-gradient(135deg, #5AC53B 0%, #4a9e2f 100%);
-  box-shadow: 0 4px 15px rgba(90, 197, 59, 0.3);
-}
-
-.predictionToggle.active:hover {
-  box-shadow: 0 6px 20px rgba(90, 197, 59, 0.4);
-}
-
-.predictionToggle:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.checkmark {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 50%;
-  width: 20px;
-  height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.7rem;
-}
-
-.spinner {
-  width: 16px;
-  height: 16px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-top-color: white;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.predictionError {
-  background: rgba(239, 68, 68, 0.15);
-  color: #ef4444;
-  padding: 8px 12px;
-  border-radius: 8px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  border: 1px solid rgba(239, 68, 68, 0.3);
-}
-
-.predictionInfo {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.predictionBadge {
-  background: rgba(90, 197, 59, 0.15);
-  color: #5AC53B;
-  padding: 6px 12px;
-  border-radius: 8px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  border: 1px solid rgba(90, 197, 59, 0.3);
-  display: flex;
-  align-items: center;
-  gap: 6px;
 }
 
 .lineGraph {
@@ -172,22 +64,6 @@
     border-radius: 12px;
   }
   
-  .lineGraphHeader {
-    flex-direction: column;
-    gap: 12px;
-    align-items: flex-start;
-  }
-  
-  .predictionControls {
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-  
-  .predictionToggle {
-    padding: 10px 16px;
-    font-size: 0.85rem;
-  }
-  
   .lineGraph {
     padding: 12px;
   }
@@ -207,19 +83,5 @@
   .lineGraphContainer {
     padding: 12px;
     border-radius: 8px;
-  }
-  
-  .predictionToggle {
-    width: 100%;
-    justify-content: center;
-  }
-  
-  .predictionInfo {
-    width: 100%;
-  }
-  
-  .predictionBadge {
-    width: 100%;
-    justify-content: center;
   }
 }

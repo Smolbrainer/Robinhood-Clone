@@ -11,7 +11,6 @@ import { getUserPortfolio } from './userData'
 ChartJS.register(...registerables)
 
 const FMP_KEY = process.env.REACT_APP_FMP_KEY || 'X5t0qm3ru74kZNRha7rSywlO8At81XrG'
-const PREDICTION_API_URL = 'http://localhost:5000'
 
 // map your timeline labels to days
 const RANGE_DAYS = {
@@ -20,20 +19,12 @@ const RANGE_DAYS = {
   '1W': 7,
   '3M': 90,
   '1Y': 365,
-  'PRED': 365 // New range for predictions
 }
 
 const options = {
   plugins: { 
     legend: { 
-      display: true,
-      labels: {
-        usePointStyle: true,
-        font: {
-          family: 'system-ui',
-          size: 12
-        }
-      }
+      display: false
     }, 
     tooltip: { 
       mode: 'index', 
@@ -45,8 +36,7 @@ const options = {
       borderWidth: 1,
       callbacks: {
         label: function(context) {
-          const label = context.dataset.label || '';
-          return `${label}: $${context.parsed.y.toLocaleString(undefined, {
+          return `Portfolio: $${context.parsed.y.toLocaleString(undefined, {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2
           })}`;
@@ -90,47 +80,9 @@ const options = {
 
 export default function LineGraph() {
   const [points, setPoints] = useState([])
-  const [predictionData, setPredictionData] = useState(null)
   const [loading, setLoading] = useState(true)
-  const [predictionLoading, setPredictionLoading] = useState(false)
   const [range, setRange] = useState('1W')
-  const [showPredictions, setShowPredictions] = useState(false)
-  const [predictionError, setPredictionError] = useState(null)
   const { currentUser } = useAuth()
-
-  // Fetch prediction data
-  const fetchPredictions = async (symbols) => {
-    if (!symbols || symbols.length === 0) return;
-    
-    setPredictionLoading(true);
-    setPredictionError(null);
-    
-    try {
-      const predictions = {};
-      
-      // Use simple prediction for faster response
-      for (const symbol of symbols) {
-        try {
-          const response = await fetch(`${PREDICTION_API_URL}/predict-simple/${symbol}`);
-          if (response.ok) {
-            const result = await response.json();
-            if (result.success) {
-              predictions[symbol] = result.data;
-            }
-          }
-        } catch (error) {
-          console.warn(`Failed to get prediction for ${symbol}:`, error);
-        }
-      }
-      
-      setPredictionData(predictions);
-    } catch (error) {
-      console.error('Error fetching predictions:', error);
-      setPredictionError('Failed to load predictions');
-    } finally {
-      setPredictionLoading(false);
-    }
-  };
 
   useEffect(() => {
     async function buildSeries() {
@@ -179,12 +131,6 @@ export default function LineGraph() {
           .sort((a, b) => a.x - b.x);
 
         setPoints(pts);
-
-        // Fetch predictions if enabled
-        if (showPredictions) {
-          const symbols = userPortfolio.stocks.map(stock => stock.symbol);
-          fetchPredictions(symbols);
-        }
       } catch (error) {
         console.error('Error building portfolio history:', error);
         setPoints([]);
@@ -194,7 +140,7 @@ export default function LineGraph() {
     }
 
     buildSeries();
-  }, [currentUser, range, showPredictions]);
+  }, [currentUser, range]);
 
   // Prepare chart data
   const getChartData = () => {
@@ -208,46 +154,6 @@ export default function LineGraph() {
       pointHoverRadius: 4,
     }];
 
-    // Add prediction data if available and enabled
-    if (showPredictions && predictionData && Object.keys(predictionData).length > 0) {
-      const lastPoint = points[points.length - 1];
-      if (lastPoint) {
-        // Aggregate predictions from all stocks
-        const predictionPoints = [];
-        const firstPrediction = Object.values(predictionData)[0];
-        
-        if (firstPrediction && firstPrediction.dates) {
-          firstPrediction.dates.forEach((date, index) => {
-            let totalPredictedValue = 0;
-            
-            // Sum predictions from all stocks in portfolio
-            Object.entries(predictionData).forEach(([symbol, prediction]) => {
-              if (prediction.predictions && prediction.predictions[index]) {
-                totalPredictedValue += prediction.predictions[index];
-              }
-            });
-            
-            predictionPoints.push({
-              x: new Date(date),
-              y: totalPredictedValue
-            });
-          });
-
-          // Add prediction line
-          datasets.push({
-            label: 'AI Prediction',
-            data: predictionPoints,
-            borderColor: '#ff6b6b',
-            backgroundColor: 'rgba(255, 107, 107, 0.1)',
-            borderDash: [5, 5],
-            fill: false,
-            pointRadius: 0,
-            pointHoverRadius: 3,
-          });
-        }
-      }
-    }
-
     return { datasets };
   };
 
@@ -255,42 +161,6 @@ export default function LineGraph() {
 
   return (
     <div className="lineGraphContainer">
-      <div className="lineGraphHeader">
-        <div className="predictionControls">
-          <button 
-            className={`predictionToggle ${showPredictions ? 'active' : ''}`}
-            onClick={() => setShowPredictions(!showPredictions)}
-            disabled={predictionLoading}
-          >
-            {predictionLoading ? (
-              <>
-                <span className="spinner"></span>
-                Loading AI...
-              </>
-            ) : (
-              <>
-                🔮 AI Predictions
-                {showPredictions && <span className="checkmark">✓</span>}
-              </>
-            )}
-          </button>
-          
-          {predictionError && (
-            <div className="predictionError">
-              ⚠️ {predictionError}
-            </div>
-          )}
-          
-          {showPredictions && predictionData && (
-            <div className="predictionInfo">
-              <span className="predictionBadge">
-                📈 1-Year Forecast Active
-              </span>
-            </div>
-          )}
-        </div>
-      </div>
-      
       <div className="lineGraph" style={{ height: 350 }}>
         {points.length > 0 ? (
           <Line 
