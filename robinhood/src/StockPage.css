@@ -331,4 +331,290 @@ button:disabled {
   .newsImage {
     height: 160px;
   }
+
+  /* Mobile AI Prediction Styles */
+  .predictionControls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .predictionToggle {
+    justify-content: center;
+    padding: 14px 20px;
+    font-size: 0.9rem;
+  }
+
+  .predictionCard {
+    padding: 20px;
+    margin: 12px 0;
+  }
+
+  .predictionCard h3 {
+    font-size: 1.2rem;
+  }
+
+  .predictionSummary {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+  }
+
+  .predictionMetric {
+    padding: 14px;
+  }
+
+  .indicatorGrid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 10px;
+  }
+
+  .indicator {
+    padding: 10px;
+  }
+
+  .predictionDisclaimer {
+    padding: 12px;
+  }
+
+  .predictionDisclaimer p {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .predictionSummary {
+    grid-template-columns: 1fr;
+  }
+  
+  .indicatorGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .predictionToggle {
+    padding: 12px 16px;
+    font-size: 0.85rem;
+  }
+}
+
+/* AI Prediction Styles */
+.predictionControls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 16px 0;
+}
+
+.predictionToggle {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.predictionToggle:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.predictionToggle.active {
+  background: linear-gradient(135deg, #5AC53B 0%, #4a9e2f 100%);
+  box-shadow: 0 4px 15px rgba(90, 197, 59, 0.3);
+}
+
+.predictionToggle.active:hover {
+  box-shadow: 0 6px 20px rgba(90, 197, 59, 0.4);
+}
+
+.predictionToggle:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.checkmark {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.predictionError {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.predictionCard {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 24px;
+  margin: 16px 0;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.predictionCard h3 {
+  margin: 0 0 20px 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.predictionSummary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.predictionMetric {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.predictionMetric .label {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: 500;
+}
+
+.predictionMetric .value {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.predictionMetric .value.positive {
+  color: #5AC53B;
+}
+
+.predictionMetric .value.negative {
+  color: #ff4d4d;
+}
+
+.predictionMetric .value.trend-strongly_bullish {
+  color: #5AC53B;
+}
+
+.predictionMetric .value.trend-bullish {
+  color: #7ed957;
+}
+
+.predictionMetric .value.trend-neutral {
+  color: #888;
+}
+
+.predictionMetric .value.trend-bearish {
+  color: #ff7b7b;
+}
+
+.predictionMetric .value.trend-strongly_bearish {
+  color: #ff4d4d;
+}
+
+.technicalIndicators {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.technicalIndicators h4 {
+  margin: 0 0 16px 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.indicatorGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.indicator {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.indicator .label {
+  font-size: 0.8rem;
+  color: #888;
+  font-weight: 500;
+}
+
+.indicator .value {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.indicator .value.positive {
+  color: #5AC53B;
+}
+
+.indicator .value.negative {
+  color: #ff4d4d;
+}
+
+.predictionDisclaimer {
+  margin-top: 24px;
+  padding: 16px;
+  background: rgba(255, 193, 7, 0.1);
+  border: 1px solid rgba(255, 193, 7, 0.3);
+  border-radius: 8px;
+}
+
+.predictionDisclaimer p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #ffc107;
+  line-height: 1.4;
 }

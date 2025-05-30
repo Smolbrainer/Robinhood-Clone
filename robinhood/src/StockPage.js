@@ -11,6 +11,7 @@ import StockChart2 from './stock2.svg'
 import negativeStockChart2 from './negStock.svg'
 
 const FMP_KEY = process.env.REACT_APP_FMP_KEY || "X5t0qm3ru74kZNRha7rSywlO8At81XrG";
+const PREDICTION_API_URL = 'http://localhost:5000';
 
 const sparkOptions = {
   plugins: { 
@@ -118,6 +119,10 @@ export default function StockPage() {
   const [loading, setLoading] = useState(true)
   const [news, setNews] = useState([])
   const [newsLoading, setNewsLoading] = useState(true)
+  const [predictionData, setPredictionData] = useState(null)
+  const [predictionLoading, setPredictionLoading] = useState(false)
+  const [predictionError, setPredictionError] = useState(null)
+  const [showPredictions, setShowPredictions] = useState(false)
 
   useEffect(() => {
     async function loadPortfolio() {
@@ -215,6 +220,79 @@ export default function StockPage() {
     return Math.random() < 0.5 ? StockChart : StockChart2;
   }, [isUp]);
 
+  // Prepare chart data including predictions
+  const getChartData = () => {
+    const datasets = [{
+      label: 'Historical Price',
+      data: chartData,
+      borderColor: isUp ? '#5AC53B' : '#ff4d4d',
+      backgroundColor: isUp ? 'rgba(90, 197, 59, 0.1)' : 'rgba(255, 77, 77, 0.1)',
+      fill: false,
+      pointRadius: 0,
+      pointHoverRadius: 3,
+    }];
+
+    // Add prediction data if available and enabled
+    if (showPredictions && predictionData && predictionData.predictions) {
+      const predictionPoints = predictionData.dates.map((date, index) => ({
+        x: new Date(date),
+        y: predictionData.predictions[index]
+      }));
+
+      // Connect last historical point to first prediction point
+      const lastHistorical = chartData[chartData.length - 1];
+      if (lastHistorical && predictionPoints.length > 0) {
+        predictionPoints.unshift(lastHistorical);
+      }
+
+      datasets.push({
+        label: 'AI Prediction',
+        data: predictionPoints,
+        borderColor: '#ff6b6b',
+        backgroundColor: 'rgba(255, 107, 107, 0.1)',
+        borderDash: [5, 5],
+        fill: false,
+        pointRadius: 0,
+        pointHoverRadius: 3,
+      });
+
+      // Add confidence bands if available
+      if (predictionData.upper_bound && predictionData.lower_bound) {
+        const upperBound = predictionData.dates.map((date, index) => ({
+          x: new Date(date),
+          y: predictionData.upper_bound[index]
+        }));
+        
+        const lowerBound = predictionData.dates.map((date, index) => ({
+          x: new Date(date),
+          y: predictionData.lower_bound[index]
+        }));
+
+        datasets.push({
+          label: 'Upper Confidence',
+          data: upperBound,
+          borderColor: 'rgba(255, 107, 107, 0.3)',
+          backgroundColor: 'rgba(255, 107, 107, 0.05)',
+          borderDash: [2, 2],
+          fill: false,
+          pointRadius: 0,
+        });
+
+        datasets.push({
+          label: 'Lower Confidence',
+          data: lowerBound,
+          borderColor: 'rgba(255, 107, 107, 0.3)',
+          backgroundColor: 'rgba(255, 107, 107, 0.05)',
+          borderDash: [2, 2],
+          fill: false,
+          pointRadius: 0,
+        });
+      }
+    }
+
+    return { datasets };
+  };
+
   async function handleBuy(e) {
     e.preventDefault();
     setTradeError('');
@@ -297,6 +375,41 @@ export default function StockPage() {
     }
   }
 
+  // Fetch AI predictions for the stock
+  const fetchPredictions = async () => {
+    if (!symbol) return;
+    
+    setPredictionLoading(true);
+    setPredictionError(null);
+    
+    try {
+      const response = await fetch(`${PREDICTION_API_URL}/predict-simple/${symbol}`);
+      if (response.ok) {
+        const result = await response.json();
+        if (result.success) {
+          setPredictionData(result.data);
+        } else {
+          setPredictionError(result.error || 'Failed to load prediction');
+        }
+      } else {
+        setPredictionError('Prediction service unavailable');
+      }
+    } catch (error) {
+      console.error('Error fetching predictions:', error);
+      setPredictionError('Unable to connect to prediction service');
+    } finally {
+      setPredictionLoading(false);
+    }
+  };
+
+  // Toggle predictions display
+  const togglePredictions = () => {
+    if (!showPredictions && !predictionData) {
+      fetchPredictions();
+    }
+    setShowPredictions(!showPredictions);
+  };
+
   return (
     <>
       <div className="stockPage">
@@ -319,7 +432,7 @@ export default function StockPage() {
               </div>
             ) : chartData.length > 0 && !error ? (
               <Line
-                data={{ datasets: [{ data: chartData, borderColor: isUp ? '#5AC53B' : '#ff4d4d', fill: false }] }}
+                data={getChartData()}
                 options={sparkOptions}
                 redraw
               />
@@ -327,6 +440,92 @@ export default function StockPage() {
               <img src={fallback} alt="chart fallback" />
             )}
           </div>
+
+          {/* AI Prediction Controls */}
+          <div className="predictionControls">
+            <button 
+              className={`predictionToggle ${showPredictions ? 'active' : ''}`}
+              onClick={togglePredictions}
+              disabled={predictionLoading}
+            >
+              {predictionLoading ? (
+                <>
+                  <span className="spinner"></span>
+                  Loading AI...
+                </>
+              ) : (
+                <>
+                  🔮 AI Predictions
+                  {showPredictions && <span className="checkmark">✓</span>}
+                </>
+              )}
+            </button>
+            
+            {predictionError && (
+              <div className="predictionError">
+                ⚠️ {predictionError}
+              </div>
+            )}
+          </div>
+
+          {/* AI Prediction Information */}
+          {showPredictions && predictionData && (
+            <div className="predictionCard">
+              <h3>🤖 AI Price Forecast</h3>
+              <div className="predictionSummary">
+                <div className="predictionMetric">
+                  <span className="label">Current Price</span>
+                  <span className="value">${predictionData.current_price?.toFixed(2)}</span>
+                </div>
+                <div className="predictionMetric">
+                  <span className="label">1-Year Prediction</span>
+                  <span className="value">${predictionData.predicted_1y_price?.toFixed(2)}</span>
+                </div>
+                <div className="predictionMetric">
+                  <span className="label">Expected Return</span>
+                  <span className={`value ${predictionData.predicted_return >= 0 ? 'positive' : 'negative'}`}>
+                    {predictionData.predicted_return >= 0 ? '+' : ''}{(predictionData.predicted_return * 100).toFixed(1)}%
+                  </span>
+                </div>
+                <div className="predictionMetric">
+                  <span className="label">Trend Analysis</span>
+                  <span className={`value trend-${predictionData.trend}`}>
+                    {predictionData.trend?.replace('_', ' ').toUpperCase()}
+                  </span>
+                </div>
+              </div>
+              
+              {predictionData.technical_indicators && (
+                <div className="technicalIndicators">
+                  <h4>Technical Analysis</h4>
+                  <div className="indicatorGrid">
+                    <div className="indicator">
+                      <span className="label">20-Day MA</span>
+                      <span className="value">${predictionData.technical_indicators.ma_20?.toFixed(2)}</span>
+                    </div>
+                    <div className="indicator">
+                      <span className="label">50-Day MA</span>
+                      <span className="value">${predictionData.technical_indicators.ma_50?.toFixed(2)}</span>
+                    </div>
+                    <div className="indicator">
+                      <span className="label">1M Momentum</span>
+                      <span className={`value ${predictionData.technical_indicators.momentum_1m >= 0 ? 'positive' : 'negative'}`}>
+                        {(predictionData.technical_indicators.momentum_1m * 100).toFixed(1)}%
+                      </span>
+                    </div>
+                    <div className="indicator">
+                      <span className="label">Volume Ratio</span>
+                      <span className="value">{predictionData.technical_indicators.volume_ratio?.toFixed(2)}x</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              <div className="predictionDisclaimer">
+                <p>⚠️ <strong>Disclaimer:</strong> This is an AI-generated prediction for educational purposes only. Not financial advice. Always do your own research before investing.</p>
+              </div>
+            </div>
+          )}
 
           {!loading && open != null && current != null && (
             <p className="percentage" style={{ color: isUp ? '#5AC53B' : '#ff4d4d' }}>

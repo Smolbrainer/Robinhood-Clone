@@ -27,10 +27,6 @@ export default function App() {
     <BrowserRouter>
       <AuthProvider>
         <div className="app">
-          <div className="app__header">
-            <Header />
-          </div>
-
           <div className="app__body">
             <Routes>
               <Route path="/login" element={<Login />} />
@@ -40,7 +36,10 @@ export default function App() {
                 path="/"
                 element={
                   <PrivateRoute>
-                    <Home />
+                    <>
+                      <Header />
+                      <Home />
+                    </>
                   </PrivateRoute>
                 }
               />
@@ -49,7 +48,10 @@ export default function App() {
                 path="/stock/:symbol"
                 element={
                   <PrivateRoute>
-                    <StockPage />
+                    <>
+                      <Header />
+                      <StockPage />
+                    </>
                   </PrivateRoute>
                 }
               />
@@ -58,7 +60,10 @@ export default function App() {
                 path="/crypto/:symbol"
                 element={
                   <PrivateRoute>
-                    <CryptoPage />
+                    <>
+                      <Header />
+                      <CryptoPage />
+                    </>
                   </PrivateRoute>
                 }
               />

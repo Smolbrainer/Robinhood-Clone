@@ -77,9 +77,12 @@ export default function PortfolioPage() {
 
   if (loading) {
     return (
-      <div className="portfolioPage">
-        <div className="loading">Loading your portfolio…</div>
-      </div>
+      <>
+        <Header />
+        <div className="portfolioPage">
+          <div className="loading">Loading your portfolio…</div>
+        </div>
+      </>
     );
   }
 
@@ -91,55 +94,58 @@ export default function PortfolioPage() {
     : 0;
 
   return (
-    <div className="portfolioPage">
-      <div className="portfolioSummary">
-        <h2>Portfolio Value</h2>
-        <p className="totalValue">${totalValue.toFixed(2)}</p>
-        <p className={'totalChange ' + (totalGain >= 0 ? 'positive' : 'negative')}>
-          {totalGain >= 0 ? '+' : ''}
-          ${totalGain.toFixed(2)} ({totalPct.toFixed(2)}%)
-        </p>
-        <p className="cashBalance">Cash Balance: ${portfolio?.cash?.toFixed(2) || '0.00'}</p>
-      </div>
-
-      {holdings.length > 0 ? (
-        <table className="holdingsTable">
-          <thead>
-            <tr>
-              <th>Ticker</th>
-              <th>Shares</th>
-              <th>Avg. Price</th>
-              <th>Current</th>
-              <th>Value</th>
-              <th>Gain/Loss</th>
-            </tr>
-          </thead>
-          <tbody>
-            {holdings.map(h => (
-              <tr
-                key={h.ticker}
-                onClick={() => navigate(`/stock/${h.ticker}`)}
-                style={{ cursor: 'pointer' }}
-              >
-                <td>{h.ticker}</td>
-                <td>{h.shares}</td>
-                <td>${h.averagePrice.toFixed(2)}</td>
-                <td>${h.current.toFixed(2)}</td>
-                <td>${h.value.toFixed(2)}</td>
-                <td className={h.gain >= 0 ? 'positive' : 'negative'}>
-                  {h.gain >= 0 ? '+' : ''}
-                  ${h.gain.toFixed(2)} ({h.gainPercent.toFixed(2)}%)
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      ) : (
-        <div className="noHoldings">
-          <p>You don't have any stocks in your portfolio yet.</p>
-          <button onClick={() => navigate('/')}>Start Trading</button>
+    <>
+      <Header />
+      <div className="portfolioPage">
+        <div className="portfolioSummary">
+          <h2>Portfolio Value</h2>
+          <p className="totalValue">${totalValue.toFixed(2)}</p>
+          <p className={'totalChange ' + (totalGain >= 0 ? 'positive' : 'negative')}>
+            {totalGain >= 0 ? '+' : ''}
+            ${Math.abs(totalGain).toFixed(2)} ({Math.abs(totalPct).toFixed(2)}%)
+          </p>
+          <p className="cashBalance">Cash Balance: ${portfolio?.cash?.toFixed(2) || '0.00'}</p>
         </div>
-      )}
-    </div>
+
+        {holdings.length > 0 ? (
+          <table className="holdingsTable">
+            <thead>
+              <tr>
+                <th>Ticker</th>
+                <th>Shares</th>
+                <th>Avg. Price</th>
+                <th>Current</th>
+                <th>Value</th>
+                <th>Gain/Loss</th>
+              </tr>
+            </thead>
+            <tbody>
+              {holdings.map(h => (
+                <tr
+                  key={h.ticker}
+                  onClick={() => navigate(`/stock/${h.ticker}`)}
+                >
+                  <td>{h.ticker}</td>
+                  <td>{h.shares.toLocaleString()}</td>
+                  <td>${h.averagePrice.toFixed(2)}</td>
+                  <td>${h.current.toFixed(2)}</td>
+                  <td>${h.value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                  <td className={h.gain >= 0 ? 'positive' : 'negative'}>
+                    {h.gain >= 0 ? '+' : ''}
+                    ${Math.abs(h.gain).toFixed(2)} ({Math.abs(h.gainPercent).toFixed(2)}%)
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <div className="noHoldings">
+            <p>You don't have any stocks in your portfolio yet.</p>
+            <p>Start your investment journey today!</p>
+            <button onClick={() => navigate('/')}>Start Trading</button>
+          </div>
+        )}
+      </div>
+    </>
   );
 }
