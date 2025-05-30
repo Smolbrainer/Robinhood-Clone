@@ -442,13 +442,12 @@ Cache Hit Rate:         > 80%
 
 ### **🌟 Get Help & Connect**
 
-[![Discord](https://img.shields.io/badge/Discord-Join%20Community-5865F2?style=for-the-badge&logo=discord)](https://discord.gg/tradesmart-ai)
-[![GitHub Issues](https://img.shields.io/badge/GitHub-Report%20Bug-red?style=for-the-badge&logo=github)](https://github.com/yourusername/tradesmart-ai/issues)
-[![Documentation](https://img.shields.io/badge/Docs-Read%20More-blue?style=for-the-badge&logo=gitbook)](https://docs.tradesmartai.com)
+![](https://dcbadge.limes.pink/api/shield/617169125105467403)
+[![GitHub Issues](https://img.shields.io/badge/GitHub-Report%20Bug-red?style=for-the-badge&logo=github)](https://github.com/Smolbrainer/tradesmart-ai/issues)
 
-**📧 Email:** support@tradesmartai.com  
-**💬 Discussions:** [GitHub Discussions](https://github.com/yourusername/tradesmart-ai/discussions)  
-**🐦 Twitter:** [@TradeSmartAI](https://twitter.com/tradesmartai)
+
+**💬 Discussions:** [GitHub Discussions](https://github.com/Smolbrainer/tradesmart-ai/discussions)  
+**🐦 Twitter:** [@Smolbrainerr](https://twitter.com/Smolbrainerr)
 
 </div>
 
