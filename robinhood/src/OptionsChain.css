@@ -1,0 +1,393 @@
+.optionsChain {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 20px;
+  color: #fff;
+}
+
+/* Header Controls */
+.chainHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.expirationSelector {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.expirationSelector label {
+  font-weight: 600;
+  color: #8B5CF6;
+}
+
+.expirationSelector select {
+  background: rgba(15, 15, 15, 0.95);
+  border: 1px solid rgba(139, 92, 246, 0.4);
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.expirationSelector select:focus {
+  outline: none;
+  border-color: #8B5CF6;
+  box-shadow: 0 0 10px rgba(139, 92, 246, 0.3);
+}
+
+.expirationSelector select option {
+  background: #1a1a2e;
+  color: #fff;
+  padding: 8px 12px;
+  font-size: 14px;
+}
+
+.expirationSelector select option:hover {
+  background: rgba(139, 92, 246, 0.2);
+}
+
+.chainFilters {
+  display: flex;
+  gap: 20px;
+}
+
+.filterGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filterGroup label {
+  font-size: 14px;
+  color: #bbb;
+}
+
+.filterGroup select {
+  background: rgba(15, 15, 15, 0.95);
+  border: 1px solid rgba(139, 92, 246, 0.4);
+  border-radius: 6px;
+  padding: 6px 10px;
+  color: #fff;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.filterGroup select:focus {
+  outline: none;
+  border-color: #8B5CF6;
+  box-shadow: 0 0 8px rgba(139, 92, 246, 0.3);
+}
+
+.filterGroup select option {
+  background: #1a1a2e;
+  color: #fff;
+  padding: 6px 10px;
+  font-size: 13px;
+}
+
+.filterGroup select option:hover {
+  background: rgba(139, 92, 246, 0.2);
+}
+
+.chainInfo {
+  color: #8B5CF6;
+  font-weight: 500;
+}
+
+/* Options Chain Table */
+.chainTable {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.chainHeaders {
+  display: grid;
+  grid-template-columns: 2fr 100px 2fr;
+  gap: 1px;
+  margin-bottom: 1px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px 8px 0 0;
+}
+
+.callsHeader, .putsHeader {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 15px;
+  text-align: center;
+}
+
+.callsHeader h3, .putsHeader h3 {
+  margin: 0 0 10px 0;
+  font-size: 16px;
+  color: #8B5CF6;
+}
+
+.strikeHeader {
+  background: rgba(139, 92, 246, 0.2);
+  padding: 15px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.strikeHeader h3 {
+  margin: 0;
+  color: #8B5CF6;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.headerRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 0.7fr 0.7fr 0.8fr 0.8fr;
+  gap: 8px;
+  font-size: 12px;
+  color: #bbb;
+  font-weight: 600;
+}
+
+.putsHeader .headerRow {
+  grid-template-columns: 0.8fr 0.8fr 0.7fr 0.7fr 1fr 1fr 1fr;
+}
+
+/* Options Rows */
+.chainRows {
+  max-height: 600px;
+  overflow-y: auto;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0 0 8px 8px;
+}
+
+.chainRow {
+  display: grid;
+  grid-template-columns: 2fr 100px 2fr;
+  gap: 1px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.chainRow:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.callSide, .putSide {
+  padding: 12px 15px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 0.7fr 0.7fr 0.8fr 0.8fr;
+  gap: 8px;
+  align-items: center;
+  font-size: 13px;
+}
+
+.putSide {
+  grid-template-columns: 0.8fr 0.8fr 0.7fr 0.7fr 1fr 1fr 1fr;
+}
+
+.callSide.hasData:hover, .putSide.hasData:hover {
+  background: rgba(139, 92, 246, 0.1);
+  border-radius: 6px;
+}
+
+.callSide.selected, .putSide.selected {
+  background: rgba(139, 92, 246, 0.3) !important;
+  border-radius: 6px;
+  box-shadow: 0 0 10px rgba(139, 92, 246, 0.3);
+}
+
+.callSide.noData, .putSide.noData {
+  background: rgba(255, 255, 255, 0.02);
+  cursor: default;
+  opacity: 0.3;
+}
+
+.emptyOption {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: #666;
+}
+
+/* Strike Price Column */
+.strikePrice {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 12px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.strikePrice.atm {
+  background: rgba(255, 193, 7, 0.2);
+  color: #FFD700;
+  border: 1px solid rgba(255, 193, 7, 0.4);
+}
+
+.strikePrice.belowPrice {
+  color: #00C805;
+}
+
+.strikePrice.abovePrice {
+  color: #ff4d4d;
+}
+
+/* Column Data Styling */
+.col-last.itm {
+  color: #00C805;
+  font-weight: 600;
+}
+
+.col-last.otm {
+  color: #ff8a80;
+}
+
+.col-bid, .col-ask {
+  color: #8BC34A;
+}
+
+.col-vol, .col-oi {
+  color: #03DAC6;
+}
+
+.col-iv {
+  color: #FF9800;
+}
+
+.col-delta {
+  color: #9C27B0;
+  font-weight: 600;
+}
+
+/* Chain Statistics */
+.chainStats {
+  display: flex;
+  justify-content: space-around;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.statGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.statGroup label {
+  font-size: 12px;
+  color: #8B5CF6;
+  font-weight: 600;
+}
+
+.statGroup span {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* Legend */
+.chainLegend {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.legend-color.itm {
+  background: #00C805;
+}
+
+.legend-color.otm {
+  background: #ff8a80;
+}
+
+.legend-color.atm {
+  background: #FFD700;
+}
+
+/* No Data State */
+.noData {
+  text-align: center;
+  padding: 40px;
+  color: #888;
+}
+
+.noData p {
+  margin: 0;
+  font-size: 16px;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .chainHeaders {
+    grid-template-columns: 1.5fr 80px 1.5fr;
+  }
+  
+  .chainRow {
+    grid-template-columns: 1.5fr 80px 1.5fr;
+  }
+  
+  .headerRow, .callSide, .putSide {
+    grid-template-columns: 1fr 1fr 0.8fr 0.6fr 0.6fr 0.7fr;
+  }
+  
+  .putsHeader .headerRow, .putSide {
+    grid-template-columns: 0.7fr 0.6fr 0.6fr 0.8fr 1fr 1fr;
+  }
+  
+  .col-oi, .col-vol {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .chainHeader {
+    flex-direction: column;
+    gap: 15px;
+    align-items: stretch;
+  }
+  
+  .chainFilters {
+    justify-content: space-between;
+  }
+  
+  .chainStats {
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+  
+  .chainLegend {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+} 

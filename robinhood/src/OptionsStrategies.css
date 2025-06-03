@@ -1,0 +1,482 @@
+.optionsStrategies {
+  padding: 20px;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 16px;
+  height: 100%;
+  overflow-y: auto;
+}
+
+/* Header */
+.strategiesHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.strategiesHeader h2 {
+  margin: 0;
+  color: #8B5CF6;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.strategiesInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+  font-size: 14px;
+  color: #bbb;
+}
+
+/* Main Content Layout */
+.strategiesContent {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+  height: calc(100vh - 200px);
+}
+
+/* Left Panel - Strategy Selection */
+.strategiesPanel {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow-y: auto;
+}
+
+.panelHeader {
+  margin-bottom: 20px;
+}
+
+.panelHeader h3 {
+  margin: 0 0 8px 0;
+  color: #8B5CF6;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.panelHeader p {
+  margin: 0;
+  color: #bbb;
+  font-size: 14px;
+}
+
+/* Strategy Cards */
+.strategiesList {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.strategyCard {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.strategyCard:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(139, 92, 246, 0.3);
+  transform: translateY(-2px);
+}
+
+.strategyCard.selected {
+  background: rgba(139, 92, 246, 0.15);
+  border-color: rgba(139, 92, 246, 0.5);
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
+}
+
+.strategyHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.strategyHeader h4 {
+  margin: 0;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.complexity {
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.complexity.beginner {
+  background: rgba(76, 175, 80, 0.2);
+  color: #4CAF50;
+  border: 1px solid rgba(76, 175, 80, 0.3);
+}
+
+.complexity.intermediate {
+  background: rgba(255, 152, 0, 0.2);
+  color: #FF9800;
+  border: 1px solid rgba(255, 152, 0, 0.3);
+}
+
+.complexity.advanced {
+  background: rgba(244, 67, 54, 0.2);
+  color: #f44336;
+  border: 1px solid rgba(244, 67, 54, 0.3);
+}
+
+.strategyDescription {
+  margin: 0 0 15px 0;
+  color: #bbb;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.strategyMetrics {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.metric {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.metric .label {
+  font-size: 12px;
+  color: #888;
+}
+
+.metric .value {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.metric .value.risk {
+  color: #ff6b6b;
+}
+
+.metric .value.reward {
+  color: #51cf66;
+}
+
+.strategyLegs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.leg {
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.leg.buy {
+  background: rgba(0, 200, 5, 0.2);
+  color: #00C805;
+  border: 1px solid rgba(0, 200, 5, 0.3);
+}
+
+.leg.sell {
+  background: rgba(255, 77, 77, 0.2);
+  color: #ff4d4d;
+  border: 1px solid rgba(255, 77, 77, 0.3);
+}
+
+/* Custom Strategy Builder */
+.customStrategy {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.addLegBtn {
+  background: rgba(139, 92, 246, 0.2);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  color: #8B5CF6;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.addLegBtn:hover {
+  background: rgba(139, 92, 246, 0.3);
+}
+
+.customLeg {
+  display: grid;
+  grid-template-columns: 1fr 1fr 60px 1fr 30px;
+  gap: 8px;
+  align-items: center;
+  margin: 10px 0;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.customLeg select,
+.customLeg input {
+  background: rgba(15, 15, 15, 0.95);
+  border: 1px solid rgba(139, 92, 246, 0.4);
+  border-radius: 6px;
+  padding: 6px 8px;
+  color: #fff;
+  font-size: 12px;
+}
+
+.customLeg select option {
+  background: #1a1a2e;
+  color: #fff;
+}
+
+.removeLegBtn {
+  background: rgba(244, 67, 54, 0.2);
+  border: 1px solid rgba(244, 67, 54, 0.3);
+  color: #f44336;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.removeLegBtn:hover {
+  background: rgba(244, 67, 54, 0.3);
+}
+
+/* Right Panel - Analysis */
+.analysisPanel {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow-y: auto;
+}
+
+/* Strike Selection */
+.strikeSelection {
+  margin-bottom: 25px;
+}
+
+.strikeSelection h4 {
+  margin: 0 0 15px 0;
+  color: #fff;
+  font-size: 16px;
+}
+
+.strikeInputs {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.strikeInput {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.strikeInput label {
+  font-size: 14px;
+  color: #bbb;
+  min-width: 150px;
+}
+
+.strikeInput select {
+  background: rgba(15, 15, 15, 0.95);
+  border: 1px solid rgba(139, 92, 246, 0.4);
+  border-radius: 6px;
+  padding: 8px 12px;
+  color: #fff;
+  font-size: 14px;
+  flex: 1;
+}
+
+.strikeInput select option {
+  background: #1a1a2e;
+  color: #fff;
+}
+
+/* Strategy Metrics */
+.strategyMetrics {
+  margin-bottom: 25px;
+}
+
+.strategyMetrics h4 {
+  margin: 0 0 15px 0;
+  color: #fff;
+  font-size: 16px;
+}
+
+.metricsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.metricItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 15px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.metricItem .label {
+  font-size: 14px;
+  color: #bbb;
+}
+
+.metricItem .value {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.metricItem .value.cost {
+  color: #ff6b6b;
+}
+
+.metricItem .value.credit {
+  color: #51cf66;
+}
+
+.metricItem .value.profit {
+  color: #51cf66;
+}
+
+.metricItem .value.loss {
+  color: #ff6b6b;
+}
+
+/* Payoff Diagram */
+.payoffDiagram {
+  margin-bottom: 20px;
+}
+
+.payoffDiagram h4 {
+  margin: 0 0 15px 0;
+  color: #fff;
+  font-size: 16px;
+}
+
+.chartContainer {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  padding: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.chartContainer svg {
+  width: 100%;
+  height: 300px;
+}
+
+.chartLabels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  font-size: 12px;
+  color: #888;
+}
+
+.leftLabel,
+.rightLabel {
+  color: #bbb;
+}
+
+.centerLabel {
+  color: #FFD700;
+  font-weight: 600;
+}
+
+/* No Data State */
+.noData {
+  text-align: center;
+  padding: 60px 20px;
+  color: #888;
+}
+
+.noData h3 {
+  margin: 0 0 15px 0;
+  color: #8B5CF6;
+  font-size: 20px;
+}
+
+.noData p {
+  margin: 0;
+  font-size: 16px;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .strategiesContent {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .metricsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .strategiesHeader {
+    flex-direction: column;
+    gap: 15px;
+    align-items: stretch;
+  }
+  
+  .strategyHeader {
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  
+  .strategyMetrics {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .customLeg {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  
+  .strikeInput {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  
+  .strikeInput label {
+    min-width: auto;
+  }
+} 

@@ -1,0 +1,480 @@
+.optionsAnalytics {
+  padding: 20px;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 16px;
+  height: 100%;
+  overflow-y: auto;
+}
+
+/* Header */
+.analyticsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.analyticsHeader h2 {
+  margin: 0;
+  color: #8B5CF6;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.expirationInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+  font-size: 14px;
+  color: #bbb;
+}
+
+/* Metric Selector */
+.metricSelector {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 25px;
+  padding: 5px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+}
+
+.metricBtn {
+  flex: 1;
+  padding: 12px 20px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  color: #bbb;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.metricBtn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+}
+
+.metricBtn.active {
+  background: rgba(139, 92, 246, 0.2);
+  color: #8B5CF6;
+  border: 1px solid rgba(139, 92, 246, 0.3);
+}
+
+/* Key Metrics Dashboard */
+.keyMetrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.metricCard {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.metricCard:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(139, 92, 246, 0.3);
+}
+
+.metricLabel {
+  font-size: 14px;
+  color: #bbb;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.metricValue {
+  font-size: 24px;
+  font-weight: 700;
+  color: #8B5CF6;
+  margin-bottom: 5px;
+}
+
+.metricDescription {
+  font-size: 12px;
+  color: #888;
+}
+
+/* Analytics Content */
+.analyticsContent {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  padding: 25px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.analyticsContent h3 {
+  margin: 0 0 20px 0;
+  color: #8B5CF6;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+/* Volatility Analysis */
+.volatilityMetrics {
+  display: flex;
+  gap: 30px;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+}
+
+.volMetric {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.volLabel {
+  font-size: 14px;
+  color: #bbb;
+}
+
+.volValue {
+  font-size: 18px;
+  font-weight: 700;
+  color: #00C805;
+}
+
+.volatilityChart {
+  margin-bottom: 20px;
+}
+
+.volatilityChart h4 {
+  margin: 0 0 15px 0;
+  color: #fff;
+  font-size: 16px;
+}
+
+.chartContainer {
+  position: relative;
+  height: 200px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 10px;
+}
+
+.volPoint {
+  position: absolute;
+}
+
+.point {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.point.call {
+  background: #00C805;
+  box-shadow: 0 0 8px rgba(0, 200, 5, 0.5);
+}
+
+.point.put {
+  background: #ff4d4d;
+  box-shadow: 0 0 8px rgba(255, 77, 77, 0.5);
+}
+
+.atmLine {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: #FFD700;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+.chartLabels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #888;
+}
+
+/* Greeks Analysis */
+.greeksCharts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+  margin-bottom: 25px;
+}
+
+.greekChart h4 {
+  margin: 0 0 15px 0;
+  color: #fff;
+  font-size: 16px;
+}
+
+.chartBars {
+  display: flex;
+  gap: 2px;
+  height: 150px;
+  align-items: flex-end;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.greekBar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  min-width: 20px;
+}
+
+.bar {
+  width: 100%;
+  border-radius: 2px 2px 0 0;
+  min-height: 2px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.bar:hover {
+  opacity: 0.7;
+}
+
+.bar.delta.call {
+  background: linear-gradient(to top, #00C805, #4CAF50);
+}
+
+.bar.delta.put {
+  background: linear-gradient(to top, #ff4d4d, #f44336);
+}
+
+.bar.gamma.call {
+  background: linear-gradient(to top, #2196F3, #03DAC6);
+}
+
+.bar.gamma.put {
+  background: linear-gradient(to top, #9C27B0, #E91E63);
+}
+
+.strikeLabel {
+  font-size: 10px;
+  color: #888;
+  margin-top: 5px;
+  writing-mode: vertical-lr;
+  text-orientation: mixed;
+}
+
+.greeksSummary {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.summaryCard h5 {
+  margin: 0 0 15px 0;
+  color: #8B5CF6;
+  font-size: 16px;
+}
+
+.greekItem {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.greekItem:last-child {
+  border-bottom: none;
+}
+
+/* Volume Analysis */
+.volumeCharts {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 30px;
+}
+
+.volumeChart h4, .volumeMetrics h4 {
+  margin: 0 0 15px 0;
+  color: #fff;
+  font-size: 16px;
+}
+
+.volumeList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.volumeItem {
+  display: grid;
+  grid-template-columns: 120px 1fr 80px;
+  gap: 15px;
+  align-items: center;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.volumeStrike {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.strikeType {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.strikeType.call {
+  color: #00C805;
+}
+
+.strikeType.put {
+  color: #ff4d4d;
+}
+
+.typeLabel {
+  font-size: 10px;
+  color: #888;
+  text-transform: uppercase;
+}
+
+.volumeBar {
+  position: relative;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.volumeFill {
+  height: 100%;
+  border-radius: 10px;
+  position: relative;
+}
+
+.volumeFill.call {
+  background: linear-gradient(90deg, #00C805, #4CAF50);
+}
+
+.volumeFill.put {
+  background: linear-gradient(90deg, #ff4d4d, #f44336);
+}
+
+.volumeText {
+  position: absolute;
+  top: 50%;
+  left: 8px;
+  transform: translateY(-50%);
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.oiText {
+  font-size: 12px;
+  color: #bbb;
+  text-align: right;
+}
+
+.volumeMetrics {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.insight {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.insight:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.insightLabel {
+  font-size: 13px;
+  color: #bbb;
+}
+
+.insightValue {
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* No Data State */
+.noData {
+  text-align: center;
+  padding: 60px 20px;
+  color: #888;
+}
+
+.noData h3 {
+  margin: 0 0 15px 0;
+  color: #8B5CF6;
+  font-size: 20px;
+}
+
+.noData p {
+  margin: 0;
+  font-size: 16px;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .greeksCharts {
+    grid-template-columns: 1fr;
+  }
+  
+  .volumeCharts {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .analyticsHeader {
+    flex-direction: column;
+    gap: 15px;
+    align-items: stretch;
+  }
+  
+  .metricSelector {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .keyMetrics {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .volatilityMetrics {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .volumeItem {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  
+  .chartBars {
+    height: 120px;
+  }
+} 
