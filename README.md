@@ -1,14 +1,15 @@
-# 🚀 TradeSmart AI - Intelligent Trading Platform
+# 🚀 TradeSmart AI - Advanced Options & Stock Trading Platform
 
 <div align="center">
 
 ![TradeSmart AI Banner](https://img.shields.io/badge/🤖-AI%20Powered%20Trading-green?style=for-the-badge)
 
-**A sophisticated, AI-powered stock trading platform with machine learning predictions**
+**A sophisticated, AI-powered trading platform with comprehensive options trading and machine learning predictions**
 
 [![React](https://img.shields.io/badge/React-19.1.0-blue.svg)](https://reactjs.org/)
 [![Python](https://img.shields.io/badge/Python-3.13+-green.svg)](https://python.org/)
 [![AI Powered](https://img.shields.io/badge/AI-ML%20Predictions-purple.svg)](https://scikit-learn.org/)
+[![Options Trading](https://img.shields.io/badge/Options-Black%20Scholes-orange.svg)](#)
 [![Firebase](https://img.shields.io/badge/Firebase-Auth%20%26%20DB-orange.svg)](https://firebase.google.com/)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
@@ -20,12 +21,13 @@
 
 ## 🌟 **Project Overview**
 
-**TradeSmart AI** is a professional-grade stock trading platform that combines modern web technologies with cutting-edge artificial intelligence. Built as a full-stack application with React frontend and Python ML backend, it demonstrates advanced software engineering practices and financial technology implementation with intelligent trading insights.
+**TradeSmart AI** is a professional-grade trading platform that combines modern web technologies with cutting-edge artificial intelligence and comprehensive options trading capabilities. Built as a full-stack application with React frontend and Python ML backend, it demonstrates advanced financial technology implementation with intelligent trading insights and sophisticated options strategies.
 
 ### **🎯 Key Highlights**
-- 🏦 **Real-time stock trading** simulation with portfolio management
+- 🏦 **Real-time stock trading** simulation with advanced portfolio management
+- ⚡ **Comprehensive options trading** with Black-Scholes pricing and Greeks calculations
 - 🤖 **AI-powered predictions** using Random Forest with 25+ technical indicators  
-- 🎨 **Beautiful glassmorphism UI** with modern design language
+- 🎨 **Beautiful modern UI** with clean, professional design language
 - 📊 **Interactive charts** with zoom, pan, and prediction overlays
 - 🔥 **High-performance architecture** with caching and optimization
 - 📱 **Fully responsive** design for all devices
@@ -40,19 +42,22 @@ TradeSmart-AI/
 │   ├── src/
 │   │   ├── components/              # React Components
 │   │   │   ├── Header.js           # Navigation & Search
-│   │   │   ├── PortfolioPage.js    # Dashboard & Portfolio
+│   │   │   ├── PortfolioPage.js    # Enhanced Dashboard & Portfolio
+│   │   │   ├── OptionsPortfolio.js # Options Trading Interface
 │   │   │   ├── StockPage.js        # Individual Stock View
-│   │   │   ├── LineGraph.js        # Chart Components
+│   │   │   ├── LineGraph.js        # Advanced Chart Components
+│   │   │   ├── Stats.js            # Portfolio Analytics
 │   │   │   └── ...
 │   │   ├── styles/                 # CSS Stylesheets
-│   │   └── utils/                  # Helper Functions
+│   │   └── utils/                  # Helper Functions & Trading Logic
 │   ├── public/                     # Static Assets
 │   ├── package.json               # Dependencies & Scripts
 │   └── README.md                  # Frontend Documentation
 │
-├── 🤖 prediction-service/           # Python AI Backend
-│   ├── advanced_app.py            # Flask API Server
+├── 🤖 prediction-service/           # Python AI & Options Backend
+│   ├── advanced_app.py            # Flask API Server with Options
 │   ├── stock_predictor.py         # ML Models & Logic
+│   ├── options_pricing.py         # Black-Scholes Implementation
 │   ├── simple_app.py              # Lightweight Predictions
 │   ├── requirements.txt           # Python Dependencies
 │   ├── run.py                     # Service Runner
@@ -71,15 +76,30 @@ TradeSmart-AI/
 <tr>
 <td width="50%" valign="top">
 
-### 🎯 **Smart Trading Platform**
+### 🎯 **Advanced Trading Platform**
 - ✅ **Real-time stock quotes** and historical data
 - ✅ **Buy/sell execution** with live pricing
-- ✅ **Portfolio tracking** with P&L calculation
+- ✅ **Enhanced portfolio tracking** with comprehensive analytics
 - ✅ **Watchlist management** for favorite stocks
 - ✅ **Stock search** with intelligent autocomplete
 - ✅ **News integration** with financial updates
+- ✅ **Multi-timeframe analysis** (1D, 1W, 3M, 1Y, 5Y)
 
 </td>
+<td width="50%" valign="top">
+
+### ⚡ **Comprehensive Options Trading**
+- ✅ **Full options chain** data and pricing
+- ✅ **Black-Scholes pricing** model implementation
+- ✅ **Greeks calculations** (Delta, Gamma, Theta, Vega, Rho)
+- ✅ **Options portfolio management** with P&L tracking
+- ✅ **Call and Put options** trading simulation
+- ✅ **Options strategies** analysis and payoff diagrams
+- ✅ **Real-time options pricing** updates
+
+</td>
+</tr>
+<tr>
 <td width="50%" valign="top">
 
 ### 🤖 **AI & Analytics**
@@ -87,21 +107,34 @@ TradeSmart-AI/
 - ✅ **25+ Technical indicators** (RSI, MACD, Bollinger)
 - ✅ **Interactive charts** with zoom/pan capabilities
 - ✅ **Confidence scoring** for prediction reliability
-- ✅ **Multiple timeframes** (1D, 1W, 3M, 1Y, 5Y)
 - ✅ **Performance metrics** and model accuracy
+- ✅ **Volatility analysis** for options pricing
+
+</td>
+<td width="50%" valign="top">
+
+### 🎨 **Modern UI/UX**
+- ✅ **Clean, professional design** with optimal spacing
+- ✅ **Enhanced portfolio dashboard** with comprehensive overview
+- ✅ **Tabbed interface** for stocks and options
+- ✅ **Responsive layout** for all screen sizes
+- ✅ **Dark mode interface** for professional trading
+- ✅ **Smooth animations** and micro-interactions
+- ✅ **Accessibility compliant** with WCAG standards
 
 </td>
 </tr>
 <tr>
 <td width="50%" valign="top">
 
-### 🎨 **Modern UI/UX**
-- ✅ **Glassmorphism design** with frosted glass effects
-- ✅ **Professional green theme** with authentic styling
-- ✅ **Smooth animations** and micro-interactions
-- ✅ **Responsive layout** for all screen sizes
-- ✅ **Dark mode interface** for professional trading
-- ✅ **Accessibility compliant** with WCAG standards
+### 📊 **Portfolio Management**
+- ✅ **Unified portfolio view** with stocks and options
+- ✅ **Real-time portfolio valuation** including options
+- ✅ **Comprehensive P&L tracking** for all positions
+- ✅ **Portfolio breakdown** by asset type
+- ✅ **Performance analytics** and historical tracking
+- ✅ **Risk management** tools and metrics
+- ✅ **Cash management** and buying power tracking
 
 </td>
 <td width="50%" valign="top">
@@ -113,6 +146,7 @@ TradeSmart-AI/
 - ✅ **Chart.js** interactive financial charts
 - ✅ **24-hour caching** for optimal performance
 - ✅ **Error handling** and graceful fallbacks
+- ✅ **Real-time data** integration
 
 </td>
 </tr>
@@ -168,7 +202,7 @@ cd robinhood
 npm start
 # 🌐 Frontend: http://localhost:3000
 
-# Terminal 2: Start Backend (Python AI)  
+# Terminal 2: Start Backend (Python AI + Options)  
 cd prediction-service
 python advanced_app.py
 # 🤖 API: http://localhost:5000
@@ -188,39 +222,43 @@ GET http://localhost:5000/predict/AAPL
 
 # Quick Prediction (Fast Response)
 GET http://localhost:5000/predict-simple/AAPL
-
-# Batch Predictions
-POST http://localhost:5000/predict-batch
-{
-  "symbols": ["AAPL", "GOOGL", "TSLA"]
-}
-
-# Cache Management
-GET http://localhost:5000/cache/status
-POST http://localhost:5000/cache/clear
 ```
 
-### **📊 Example Response**
+### **⚡ Options Trading Endpoints**
+```bash
+# Options Chain Data
+GET http://localhost:5000/options-chain/AAPL
+
+# Options Pricing (Black-Scholes)
+GET http://localhost:5000/options-pricing/AAPL?strike=150&expiration=2024-01-19&type=call
+
+# Options Strategy Analysis
+POST http://localhost:5000/options-strategy-analysis
+
+# Payoff Diagrams
+POST http://localhost:5000/options-payoff
+```
+
+### **📊 Example Options Response**
 ```json
 {
   "success": true,
   "data": {
     "symbol": "AAPL",
-    "current_price": 199.95,
-    "predicted_1y_price": 245.30,
-    "predicted_return": 0.227,
-    "trend": "bullish",
-    "confidence_score": 92.5,
-    "model_accuracy": 0.856,
-    "predictions": [200.15, 201.45, 203.20, ...],
-    "dates": ["2025-06-02", "2025-06-03", "2025-06-04", ...],
-    "technical_indicators": {
-      "rsi": 65.2,
-      "macd": 2.45,
-      "sma_50": 195.30,
-      "bb_upper": 205.10,
-      "volume_ratio": 1.25
-    }
+    "strike": 150,
+    "expiration": "2024-01-19",
+    "type": "call",
+    "price": 5.25,
+    "greeks": {
+      "delta": 0.65,
+      "gamma": 0.025,
+      "theta": -0.045,
+      "vega": 0.18,
+      "rho": 0.12
+    },
+    "impliedVolatility": 0.28,
+    "intrinsicValue": 5.50,
+    "timeValue": 0.75
   }
 }
 ```
@@ -238,11 +276,11 @@ POST http://localhost:5000/cache/clear
 Framework:     React 19.1.0
 Routing:       React Router v7
 Charts:        Chart.js + react-chartjs-2
-UI Library:    Material-UI v7
-Styling:       CSS3 + Glassmorphism
+Styling:       CSS3 + Modern Design
 State:         React Hooks + Context
 Auth:          Firebase Authentication
 Database:      Firebase Firestore
+Real-time:     Live price feeds
 ```
 
 </td>
@@ -252,12 +290,12 @@ Database:      Firebase Firestore
 ```yaml
 Framework:     Python Flask
 ML Library:    scikit-learn + Random Forest
-Data Source:   Yahoo Finance (yfinance)
-Processing:    pandas + numpy
+Options:       Black-Scholes + Greeks
+Data Source:   Yahoo Finance + FMP API
+Processing:    pandas + numpy + scipy
 Technical:     TA-Lib (25+ indicators)
 Caching:       In-memory with TTL
 API Format:    RESTful JSON
-CORS:          Flask-CORS
 ```
 
 </td>
@@ -265,21 +303,29 @@ CORS:          Flask-CORS
 </table>
 
 ### **🔌 External APIs**
-- **Financial Modeling Prep** - Real-time stock data and historical charts
-- **Yahoo Finance** - Stock price feeds for ML training
+- **Financial Modeling Prep** - Real-time stock data, options chains, and historical charts
+- **Yahoo Finance** - Stock price feeds for ML training and options data
 - **Firebase** - Authentication, user management, and portfolio storage
 
 ---
 
 ## 📱 **Usage Guide**
 
-### **🎯 For Traders**
+### **🎯 For Stock Traders**
 1. **Sign Up** → Create account with email/password
 2. **Add Funds** → Virtual cash for demo trading ($10,000 starting balance)
 3. **Search Stocks** → Find companies by symbol or name
 4. **Analyze** → View charts, news, and AI predictions
 5. **Trade** → Execute buy/sell orders with real-time pricing
 6. **Track** → Monitor portfolio performance and P&L
+
+### **⚡ For Options Traders**
+1. **Options Chain** → View all available options for a stock
+2. **Analyze Greeks** → Review Delta, Gamma, Theta, Vega, Rho
+3. **Select Strategy** → Choose calls, puts, or complex strategies
+4. **Execute Trades** → Buy/sell options with Black-Scholes pricing
+5. **Monitor Positions** → Track options P&L and time decay
+6. **Portfolio View** → See combined stocks + options portfolio
 
 ### **🤖 For AI Predictions**
 1. **Select Stock** → Navigate to any stock page
@@ -288,22 +334,23 @@ CORS:          Flask-CORS
 4. **Analyze Indicators** → Review 25+ technical analysis metrics
 5. **Assess Risk** → Understand volatility and prediction reliability
 
-### **💻 For Developers**
-1. **Explore API** → Test endpoints with curl or Postman
-2. **Customize Models** → Modify ML algorithms in `stock_predictor.py`
-3. **Extend Features** → Add new components in React frontend
-4. **Deploy** → Use Docker for containerized deployment
-
 ---
 
 ## 🔥 **Advanced Features**
 
-### **📊 Interactive Charts**
-- **Zoom & Pan** → Explore different time periods
-- **Prediction Overlay** → Toggle AI forecasts on/off  
-- **Technical Indicators** → RSI, MACD, Bollinger Bands
-- **Multiple Timeframes** → 1D, 1W, 3M, 1Y, 5Y views
-- **Volume Analysis** → Track trading activity
+### **📊 Enhanced Portfolio Management**
+- **Unified Dashboard** → Combined stocks and options view
+- **Real-time Valuation** → Live portfolio pricing including options
+- **Comprehensive Analytics** → Breakdown by asset type and performance
+- **Risk Metrics** → Portfolio risk analysis and Greeks exposure
+- **Historical Tracking** → Performance over time with charts
+
+### **⚡ Options Trading Engine**
+- **Black-Scholes Pricing** → Accurate theoretical option prices
+- **Greeks Calculations** → Real-time risk metrics for all positions
+- **Strategy Analysis** → Payoff diagrams and profit/loss scenarios
+- **Volatility Modeling** → Implied volatility calculations
+- **Options Chain** → Complete options data with bid/ask spreads
 
 ### **🤖 Machine Learning**
 - **Random Forest Algorithm** → Ensemble learning for robust predictions
@@ -314,8 +361,8 @@ CORS:          Flask-CORS
 
 ### **⚡ Performance Optimizations**
 - **Prediction Caching** → 24-hour cache for faster responses
+- **Real-time Updates** → Live price feeds and portfolio updates
 - **Lazy Loading** → Components load on demand
-- **Code Splitting** → Optimized bundle sizes
 - **API Throttling** → Rate limiting for external services
 - **Error Boundaries** → Graceful error handling
 
@@ -341,13 +388,13 @@ flake8 .                   # Python linting
 python advanced_app.py     # Integration test
 ```
 
-### **API Testing**
+### **Options Testing**
 ```bash
-# Health check
-curl http://localhost:5000/health
+# Test Black-Scholes pricing
+curl "http://localhost:5000/options-pricing/AAPL?strike=150&expiration=2024-01-19&type=call"
 
-# Prediction test
-curl http://localhost:5000/predict/AAPL
+# Test options chain
+curl http://localhost:5000/options-chain/AAPL
 
 # Performance test
 ab -n 100 -c 10 http://localhost:5000/predict-simple/AAPL
@@ -385,35 +432,6 @@ gunicorn --bind 0.0.0.0:5000 advanced_app:app
 
 ---
 
-## 🤝 **Contributing**
-
-We welcome contributions! Here's how to get started:
-
-### **🔄 Development Workflow**
-1. **Fork** the repository
-2. **Clone** your fork locally
-3. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
-4. **Make** your changes with tests
-5. **Commit** with conventional commits (`git commit -m 'feat: add amazing feature'`)
-6. **Push** to your branch (`git push origin feature/amazing-feature`)
-7. **Submit** a Pull Request
-
-### **📝 Contribution Guidelines**
-- Follow **React best practices** for frontend
-- Use **PEP 8** for Python backend code
-- Write **comprehensive tests** for new features
-- Update **documentation** for API changes
-- Ensure **responsive design** for UI components
-
-### **🏷️ Issue Labels**
-- `🐛 bug` - Something isn't working
-- `✨ enhancement` - New feature or request  
-- `📚 documentation` - Improvements to docs
-- `🔧 maintenance` - Code maintenance
-- `🆘 help-wanted` - Community help needed
-
----
-
 ## 📈 **Performance Metrics**
 
 ### **⚡ Speed Benchmarks**
@@ -423,11 +441,14 @@ API Response (cached):  < 100ms
 API Response (fresh):   < 3 seconds
 Chart Rendering:        < 500ms
 ML Prediction:          < 30 seconds
+Options Pricing:        < 200ms
+Portfolio Update:       < 1 second
 ```
 
 ### **🎯 Accuracy Metrics**
 ```
 ML Model Accuracy:      85-92%
+Options Pricing:        Black-Scholes theoretical
 Prediction Confidence:  Statistical intervals
 Technical Indicators:   25+ real-time calculations
 Data Freshness:         Real-time quotes
@@ -436,20 +457,26 @@ Cache Hit Rate:         > 80%
 
 ---
 
-## 📞 **Support & Community**
+## 🤝 **Contributing**
 
-<div align="center">
+We welcome contributions! Here's how to get started:
 
-### **🌟 Get Help & Connect**
+### **🔄 Development Workflow**
+1. **Fork** the repository
+2. **Clone** your fork locally
+3. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
+4. **Make** your changes with tests
+5. **Commit** with conventional commits (`git commit -m 'feat: add options trading'`)
+6. **Push** to your branch (`git push origin feature/amazing-feature`)
+7. **Submit** a Pull Request
 
-![](https://dcbadge.limes.pink/api/shield/617169125105467403)
-[![GitHub Issues](https://img.shields.io/badge/GitHub-Report%20Bug-red?style=for-the-badge&logo=github)](https://github.com/Smolbrainer/tradesmart-ai/issues)
-
-
-**💬 Discussions:** [GitHub Discussions](https://github.com/Smolbrainer/tradesmart-ai/discussions)  
-**🐦 Twitter:** [@Smolbrainerr](https://twitter.com/Smolbrainerr)
-
-</div>
+### **📝 Contribution Guidelines**
+- Follow **React best practices** for frontend
+- Use **PEP 8** for Python backend code
+- Write **comprehensive tests** for new features
+- Update **documentation** for API changes
+- Ensure **responsive design** for UI components
+- Test **options pricing** accuracy with known values
 
 ---
 
@@ -462,6 +489,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 - 💰 **No Financial Advice** - Predictions are estimates, not recommendations  
 - 🏢 **Independent Project** - Not affiliated with any trading platforms
 - 📊 **Risk Warning** - All trading involves risk of financial loss
+- ⚡ **Options Risk** - Options trading involves additional risks
 
 ---
 
@@ -476,8 +504,9 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 - **scikit-learn** - Powerful ML library
 - **Chart.js** - Beautiful charting solution
 - **Firebase** - Backend infrastructure
-- **Open Source Community** - Countless contributions
 - **Financial Data Providers** - Market data access
+- **Options Pricing Models** - Black-Scholes foundation
+- **Open Source Community** - Countless contributions
 
 ### **📊 Project Stats**
 
@@ -495,10 +524,10 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 <div align="center">
 
-### **🚀 Ready to Trade Smarter with AI?**
+### **🚀 Ready to Trade Smarter with AI & Options?**
 
 **[🔥 Get Started Now](#-quick-start-guide) • [📖 Read the Docs](#) • [💬 Join Community](#-support--community)**
 
-*Transform your trading experience with intelligent AI insights*
+*Transform your trading experience with intelligent AI insights and professional options strategies*
 
 </div> 

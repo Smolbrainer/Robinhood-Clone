@@ -5,7 +5,7 @@ import Avatar from "@mui/material/Avatar"
 import LineGraph from "./LineGraph"
 import Chip from "@mui/material/Chip"
 import { useAuth } from "./AuthContext"
-import { getUserPortfolio } from "./userData"
+import { getUserPortfolio, getOptionsPositions } from "./userData"
 import StockCard from './StockCard'
 import CryptoCard from './CryptoCard'
 
@@ -31,22 +31,30 @@ export default function Newsfeed() {
       if (!currentUser) return;
 
       try {
-        // Load user's portfolio
-        const userPortfolio = await getUserPortfolio(currentUser.uid);
+        // Load user's portfolio and options positions
+        const [userPortfolio, optionsPositions] = await Promise.all([
+          getUserPortfolio(currentUser.uid),
+          getOptionsPositions(currentUser.uid)
+        ]);
+        
         if (!userPortfolio) return;
 
         // Set buying power
         setBuyingPower(userPortfolio.cash || 0);
 
-        // If no stocks, just show cash balance
+        // Calculate options value
+        const optionsValue = (optionsPositions || []).reduce((sum, opt) => sum + (opt.currentValue || 0), 0);
+        const optionsGain = (optionsPositions || []).reduce((sum, opt) => sum + (opt.unrealizedPnL || 0), 0);
+
+        // If no stocks, just show cash balance + options
         if (!userPortfolio.stocks || userPortfolio.stocks.length === 0) {
-          setPortfolioValue(userPortfolio.cash || 0);
-          setDailyChange(0);
-          setDailyPct(0);
+          setPortfolioValue((userPortfolio.cash || 0) + optionsValue);
+          setDailyChange(optionsGain); // Only options P&L as daily change
+          setDailyPct(optionsValue > 0 ? (optionsGain / (optionsValue - optionsGain)) * 100 : 0);
           return;
         }
 
-        // Fetch current quotes
+        // Fetch current quotes for stocks
         const symbols = userPortfolio.stocks.map(h => h.symbol).join(",");
         const res = await fetch(
           `https://financialmodelingprep.com/api/v3/quote/${symbols}?apikey=${FMP_KEY}`
@@ -56,7 +64,7 @@ export default function Newsfeed() {
         // Calculate portfolio value and changes
         let total = userPortfolio.cash || 0;
         let prevTotal = userPortfolio.cash || 0;
-        let dailyChange = 0;
+        let stocksDailyChange = 0;
 
         userPortfolio.stocks.forEach(({ symbol, shares, averagePrice }) => {
           const quote = quotes.find(q => q.symbol === symbol);
@@ -65,14 +73,19 @@ export default function Newsfeed() {
             const prevValue = quote.previousClose * shares;
             total += currentValue;
             prevTotal += prevValue;
-            dailyChange += (quote.price - quote.previousClose) * shares;
+            stocksDailyChange += (quote.price - quote.previousClose) * shares;
           }
         });
 
-        const pct = prevTotal ? (dailyChange / prevTotal) * 100 : 0;
+        // Add options to totals
+        total += optionsValue;
+        prevTotal += (optionsValue - optionsGain); // Approximate previous value
+        const totalDailyChange = stocksDailyChange + optionsGain;
+
+        const pct = prevTotal ? (totalDailyChange / prevTotal) * 100 : 0;
 
         setPortfolioValue(total);
-        setDailyChange(dailyChange);
+        setDailyChange(totalDailyChange);
         setDailyPct(pct);
       } catch (error) {
         console.error('Error fetching portfolio summary:', error);

@@ -6,7 +6,7 @@ import { Line } from 'react-chartjs-2'
 import './LineGraph.css'
 import TimeLine from './TimeLine'
 import { useAuth } from './AuthContext'
-import { getUserPortfolio } from './userData'
+import { getUserPortfolio, getOptionsPositions } from './userData'
 
 ChartJS.register(...registerables)
 
@@ -32,7 +32,7 @@ const options = {
       backgroundColor: 'rgba(0, 0, 0, 0.8)',
       titleColor: '#ffffff',
       bodyColor: '#ffffff',
-      borderColor: '#5AC53B',
+      borderColor: '#8B5CF6',
       borderWidth: 1,
       callbacks: {
         label: function(context) {
@@ -90,15 +90,29 @@ export default function LineGraph() {
       setLoading(true)
 
       try {
-        // Load user's portfolio
-        const userPortfolio = await getUserPortfolio(currentUser.uid);
-        if (!userPortfolio || !userPortfolio.stocks || userPortfolio.stocks.length === 0) {
+        // Load user's portfolio and options positions
+        const [userPortfolio, optionsPositions] = await Promise.all([
+          getUserPortfolio(currentUser.uid),
+          getOptionsPositions(currentUser.uid)
+        ]);
+        
+        if (!userPortfolio) {
           setPoints([]);
           return setLoading(false);
         }
 
         const days = RANGE_DAYS[range];
         const cash = userPortfolio.cash || 0;
+        
+        // Calculate current options value
+        const optionsValue = (optionsPositions || []).reduce((sum, opt) => sum + (opt.currentValue || 0), 0);
+
+        // If no stocks, just show cash + options for current time
+        if (!userPortfolio.stocks || userPortfolio.stocks.length === 0) {
+          const currentTime = new Date();
+          setPoints([{ x: currentTime, y: cash + optionsValue }]);
+          return setLoading(false);
+        }
 
         // Fetch history for each stock
         const allSeries = await Promise.all(
@@ -125,9 +139,11 @@ export default function LineGraph() {
           })
         );
 
-        // Add cash to each point
+        // Add cash and options to each point
+        // Note: For historical data, we use current options value as an approximation
+        // In a real implementation, you'd want to track historical options values
         const pts = Object.entries(agg)
-          .map(([ms, val]) => ({ x: new Date(+ms), y: val + cash }))
+          .map(([ms, val]) => ({ x: new Date(+ms), y: val + cash + optionsValue }))
           .sort((a, b) => a.x - b.x);
 
         setPoints(pts);
@@ -147,8 +163,8 @@ export default function LineGraph() {
     const datasets = [{
       label: 'Portfolio Value',
       data: points,
-      borderColor: '#5AC53B',
-      backgroundColor: 'rgba(90, 197, 59, 0.1)',
+      borderColor: '#00C805',
+      backgroundColor: 'rgba(0, 200, 5, 0.1)',
       fill: true,
       pointRadius: 1,
       pointHoverRadius: 4,

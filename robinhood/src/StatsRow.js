@@ -89,7 +89,7 @@ export default function StatsRow({ symbol, openPrice, price, shares, change }) {
               datasets: [
                 {
                   data: chartData,
-                  borderColor: isUp ? "#5AC53B" : "#ff4d4d",
+                  borderColor: isUp ? "#00C805" : "#ff4d4d",
                   fill: false,
                 },
               ],
@@ -111,7 +111,7 @@ export default function StatsRow({ symbol, openPrice, price, shares, change }) {
         <p className="row__price">${price.toFixed(2)}</p>
         <p
           className="row__percentage"
-          style={{ color: isUp ? "#5AC53B" : "#ff4d4d" }}
+          style={{ color: isUp ? "#00C805" : "#ff4d4d" }}
         >
           {isUp ? "+" : ""}
           {change.toFixed(2)}%

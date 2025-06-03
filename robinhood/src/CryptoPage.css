@@ -59,7 +59,7 @@
 }
 
 .cryptoPage__change.positive {
-  color: #5AC53B;
+  color: #8B5CF6;
 }
 
 .cryptoPage__change.negative {
@@ -195,7 +195,7 @@
 
 .cryptoPage__orderInputWrapper input:focus {
   outline: none;
-  border-color: #5AC53B;
+  border-color: #8B5CF6;
 }
 
 .cryptoPage__orderSummary {
@@ -223,7 +223,7 @@
 }
 
 .cryptoPage__orderSuccess {
-  color: #5AC53B;
+  color: #8B5CF6;
   font-size: 0.9rem;
   text-align: center;
 }
@@ -239,7 +239,7 @@
 }
 
 .cryptoPage__orderButton.buy {
-  background: #5AC53B;
+  background: #00C805;
   color: #fff;
 }
 
@@ -291,4 +291,28 @@
   .cryptoPage__stats {
     grid-template-columns: repeat(2, 1fr);
   }
+}
+
+.positive {
+  color: #00C805;
+}
+
+.selected {
+  border-color: #8B5CF6;
+  background: rgba(139, 92, 246, 0.1);
+}
+
+.buy-button.positive {
+  color: #00C805;
+}
+
+.crypto-buy-button {
+  background: #00C805;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
 } 

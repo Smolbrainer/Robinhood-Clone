@@ -87,7 +87,7 @@
 }
 
 .row__percentage.positive {
-  color: #5AC53B;
+  color: #00C805;
 }
 
 .row__percentage.negative {
@@ -132,7 +132,7 @@
 }
 
 .portfolio-value .change.positive {
-  color: #00c805;
+  color: #00C805;
 }
 
 .portfolio-value .change.negative {

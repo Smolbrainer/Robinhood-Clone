@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import "./Stats.css";
 import StatsRow from "./StatsRow";
 import { useAuth } from "./AuthContext";
-import { getUserPortfolio } from "./userData";
+import { getUserPortfolio, getOptionsPositions } from "./userData";
 
 const FMP_KEY = process.env.REACT_APP_FMP_KEY || "X5t0qm3ru74kZNRha7rSywlO8At81XrG";
 
@@ -13,6 +13,7 @@ const POPULAR_STOCKS = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'TSLA', 'META', 'NVDA',
 export default function Stats() {
   const [stocksData, setStocksData] = useState([]);
   const [portfolio, setPortfolio] = useState(null);
+  const [optionsPositions, setOptionsPositions] = useState([]);
   const [loading, setLoading] = useState(true);
   const { currentUser } = useAuth();
 
@@ -22,9 +23,14 @@ export default function Stats() {
 
       try {
         setLoading(true);
-        // Load user's portfolio
-        const userPortfolio = await getUserPortfolio(currentUser.uid);
+        // Load user's portfolio and options positions
+        const [userPortfolio, optionsData] = await Promise.all([
+          getUserPortfolio(currentUser.uid),
+          getOptionsPositions(currentUser.uid)
+        ]);
+        
         setPortfolio(userPortfolio);
+        setOptionsPositions(optionsData || []);
 
         // Fetch quotes for all stocks
         const symbols = [
@@ -92,13 +98,50 @@ export default function Stats() {
     return <div className="stats">Loading...</div>;
   }
 
+  // Calculate portfolio totals
+  const stocksValue = stocksData.myStocks?.reduce((sum, stock) => sum + (stock.c * stock.shares), 0) || 0;
+  const optionsValue = optionsPositions?.reduce((sum, opt) => sum + (opt.currentValue || 0), 0) || 0;
+  const cashValue = portfolio?.cash || 0;
+  const totalPortfolioValue = stocksValue + optionsValue + cashValue;
+
+  const stocksGain = stocksData.myStocks?.reduce((sum, stock) => sum + ((stock.c - stock.o) * stock.shares), 0) || 0;
+  const optionsGain = optionsPositions?.reduce((sum, opt) => sum + (opt.unrealizedPnL || 0), 0) || 0;
+  const totalGain = stocksGain + optionsGain;
+
   return (
     <div className="stats">
       <div className="stats__container">
+        {/* Portfolio Summary */}
+        <div className="stats__portfolio">
+          <div className="portfolio-summary">
+            <div className="portfolio-value">
+              <span className="label">Portfolio Value</span>
+              <span className="value">${totalPortfolioValue.toFixed(2)}</span>
+              <span className={`change ${totalGain >= 0 ? 'positive' : 'negative'}`}>
+                {totalGain >= 0 ? '+' : ''}${Math.abs(totalGain).toFixed(2)}
+              </span>
+            </div>
+            <div className="cash-balance">
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                <span>Stocks:</span>
+                <span>${stocksValue.toFixed(2)}</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                <span>Options:</span>
+                <span>${optionsValue.toFixed(2)}</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '8px', borderTop: '1px solid #42494d' }}>
+                <span>Cash:</span>
+                <span>${cashValue.toFixed(2)}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <h2>My Stocks</h2>
         <div className="stats__rows">
-          {stocksData.myStocks.length === 0 && <p>No stocks owned yet.</p>}
-          {stocksData.myStocks.map((stock) => (
+          {stocksData.myStocks?.length === 0 && <p>No stocks owned yet.</p>}
+          {stocksData.myStocks?.map((stock) => (
             <StatsRow
               key={stock.name}
               symbol={stock.name}
@@ -109,10 +152,36 @@ export default function Stats() {
             />
           ))}
         </div>
+
+        {/* Options Summary */}
+        {optionsPositions.length > 0 && (
+          <>
+            <h2 style={{marginTop: '2em'}}>My Options</h2>
+            <div className="stats__rows">
+              {optionsPositions.map((option, index) => (
+                <div key={option.id || index} className="row">
+                  <div className="row__intro">
+                    <h1>{option.symbol}</h1>
+                    <p className="row__shares">
+                      {option.type?.toUpperCase()} ${option.strike} {option.expiration}
+                    </p>
+                  </div>
+                  <div className="row__numbers">
+                    <p className="row__price">${(option.currentValue || 0).toFixed(2)}</p>
+                    <p className={`row__percentage ${(option.unrealizedPnL || 0) >= 0 ? 'positive' : 'negative'}`}>
+                      {(option.unrealizedPnL || 0) >= 0 ? '+' : ''}${Math.abs(option.unrealizedPnL || 0).toFixed(2)}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+        
         <h2 style={{marginTop: '2em'}}>My Wishlist</h2>
         <div className="stats__rows">
-          {stocksData.wishlist.length === 0 && <p>No stocks in wishlist.</p>}
-          {stocksData.wishlist.map((stock) => (
+          {stocksData.wishlist?.length === 0 && <p>No stocks in wishlist.</p>}
+          {stocksData.wishlist?.map((stock) => (
             <StatsRow
               key={stock.name}
               symbol={stock.name}

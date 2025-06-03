@@ -15,10 +15,11 @@
 }
 
 .timeline__button:hover{
-    color: #5AC53B
+    color: #8B5CF6;
+    border-bottom: 2px solid #8B5CF6;
 }
 
 .timeline__button.active {
-    color: #5AC53B;
-    border-bottom: 2px solid #5AC53B;
+    color: #8B5CF6;
+    border-bottom: 2px solid #8B5CF6;
 }

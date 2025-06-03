@@ -20,6 +20,12 @@ export default function Header() {
   const navigate = useNavigate()
   const { currentUser, logout } = useAuth()
 
+  // Sample stock symbols for suggestions
+  const popularStocks = [
+    'AAPL', 'GOOGL', 'MSFT', 'AMZN', 'TSLA', 'META', 'NVDA', 'NFLX',
+    'UBER', 'SNAP', 'TWTR', 'ORCL', 'CRM', 'ADBE', 'INTC', 'AMD'
+  ]
+
   useEffect(() => {
     const searchAssets = async () => {
       if (!searchTerm) {
@@ -191,6 +197,8 @@ export default function Header() {
               Get Free Cash
             </button>
             <Link to="/portfolio">Portfolio</Link>
+            <Link to="/options">Options</Link>
+            <Link to="/crypto">Crypto</Link>
             <button onClick={handleLogout} className="logoutButton">
               Logout
             </button>

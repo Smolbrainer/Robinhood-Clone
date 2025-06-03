@@ -19,7 +19,7 @@ export default function StockCard({ stock }) {
         <p className="stock-card__current">${parseFloat(stock.price).toFixed(2)}</p>
         <p 
           className="stock-card__change"
-          style={{ color: isUp ? '#5AC53B' : '#ff4d4d' }}
+          style={{ color: isUp ? '#00C805' : '#ff4d4d' }}
         >
           {isUp ? '+' : ''}{parseFloat(stock.changesPercentage).toFixed(2)}%
         </p>

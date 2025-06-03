@@ -30,8 +30,8 @@
 }
 
 .cryptoCard__change.positive {
-  color: #5AC53B;
-  background: rgba(90, 197, 59, 0.1);
+  color: #00C805;
+  background: rgba(0, 200, 5, 0.1);
 }
 
 .cryptoCard__change.negative {
@@ -48,4 +48,9 @@
 .cryptoCard__volume {
   font-size: 0.9rem;
   color: #888;
+}
+
+.cryptoCard__info__price.positive {
+  color: #00C805;
+  background: rgba(0, 200, 5, 0.1);
 } 

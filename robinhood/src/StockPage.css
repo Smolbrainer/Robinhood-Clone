@@ -91,12 +91,12 @@
 
 .chartBtn:hover {
   background: rgba(255, 255, 255, 0.2);
-  border-color: #5AC53B;
+  border-color: #8B5CF6;
 }
 
 .chartBtn.active {
-  background: #5AC53B;
-  border-color: #5AC53B;
+  background: #8B5CF6;
+  border-color: #8B5CF6;
   color: #000;
   font-weight: 600;
 }
@@ -114,7 +114,7 @@
 }
 
 .chartLabel.historical {
-  color: #5AC53B;
+  color: #8B5CF6;
 }
 
 .chartLabel.prediction {
@@ -240,7 +240,7 @@ input[type="number"] {
 
 input[type="number"]:focus {
   outline: none;
-  border-color: #5AC53B;
+  border-color: #8B5CF6;
 }
 
 .tradeButtons {
@@ -249,21 +249,22 @@ input[type="number"]:focus {
 }
 
 button {
-  flex: 1;
-  padding: 14px;
+  background: #00C805;
+  color: #fff;
   border: none;
+  padding: 10px 15px;
   border-radius: 8px;
-  background: #5AC53B;
-  color: white;
-  font-size: 16px;
-  font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s;
+  margin: 5px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
 }
 
 button:hover {
-  background: #4a9e2f;
-  transform: translateY(-1px);
+  background: #00A304;
+  border-color: #00C805;
 }
 
 button:disabled {
@@ -277,7 +278,7 @@ button:disabled {
 }
 
 .sellButton:hover {
-  background: #ff3333;
+  background: #7C3AED;
 }
 
 .tradeInfo {
@@ -519,35 +520,33 @@ button:disabled {
 }
 
 .predictionToggle {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #8B5CF6 0%, #3B82F6 100%);
   color: white;
   border: none;
-  padding: 12px 20px;
+  padding: 12px 24px;
   border-radius: 12px;
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 8px;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
 }
 
 .predictionToggle:hover {
+  background: linear-gradient(135deg, #3B82F6 0%, #7C3AED 100%);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
 }
 
 .predictionToggle.active {
-  background: linear-gradient(135deg, #5AC53B 0%, #4a9e2f 100%);
-  box-shadow: 0 4px 15px rgba(90, 197, 59, 0.3);
+  background: linear-gradient(135deg, #8B5CF6 0%, #3B82F6 100%);
+  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
 }
 
 .predictionToggle.active:hover {
-  box-shadow: 0 6px 20px rgba(90, 197, 59, 0.4);
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
 }
 
 .predictionToggle:disabled {
@@ -642,7 +641,7 @@ button:disabled {
 }
 
 .predictionMetric .value.positive {
-  color: #5AC53B;
+  color: #00C805;
 }
 
 .predictionMetric .value.negative {
@@ -650,11 +649,11 @@ button:disabled {
 }
 
 .predictionMetric .value.trend-strongly_bullish {
-  color: #5AC53B;
+  color: #00C805;
 }
 
 .predictionMetric .value.trend-bullish {
-  color: #7ed957;
+  color: #4CAF50;
 }
 
 .predictionMetric .value.trend-neutral {
@@ -727,7 +726,7 @@ button:disabled {
 }
 
 .indicator .value.positive {
-  color: #5AC53B;
+  color: #00C805;
 }
 
 .indicator .value.negative {
@@ -747,4 +746,368 @@ button:disabled {
   font-size: 0.8rem;
   color: #ffc107;
   line-height: 1.4;
+}
+
+/* Analyst Price Targets Styles */
+.analystTargetsCard {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 24px;
+  margin: 16px 0;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.analystTargetsCard h3 {
+  margin: 0 0 20px 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.targetLoading,
+.targetError,
+.targetEmpty {
+  text-align: center;
+  padding: 20px;
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.targetError {
+  color: #ff4d4d;
+}
+
+.targetContent {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.targetSummary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.targetMetric {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.targetMetric .label {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: 500;
+}
+
+.targetMetric .value {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.targetMetric .subtext {
+  font-size: 0.75rem;
+  color: #666;
+  font-weight: 400;
+}
+
+.targetComparison {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.timeframeComparison {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.comparisonRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.comparisonLabel {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.timeframe {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.analystCount {
+  font-size: 0.75rem;
+  color: #888;
+}
+
+.comparisonValue {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.targetPrice {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.upside {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.upside.positive {
+  color: #00C805;
+}
+
+.upside.negative {
+  color: #ff4d4d;
+}
+
+/* Analyst Grades Styles */
+.analystGradesCard {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 24px;
+  margin: 16px 0;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.analystGradesCard h3 {
+  margin: 0 0 20px 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.gradesLoading,
+.gradesError,
+.gradesEmpty {
+  text-align: center;
+  padding: 20px;
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.gradesError {
+  color: #ff4d4d;
+}
+
+.gradesContent {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.gradesList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.gradeItem {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 16px;
+  transition: all 0.2s ease;
+}
+
+.gradeItem:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.gradeHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.gradeCompany {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.gradeDate {
+  font-size: 0.8rem;
+  color: #888;
+  font-weight: 500;
+}
+
+.gradeAction {
+  margin-bottom: 12px;
+}
+
+.actionBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.actionBadge.upgrade {
+  background: rgba(0, 200, 5, 0.15);
+  color: #00C805;
+  border: 1px solid rgba(0, 200, 5, 0.3);
+}
+
+.actionBadge.downgrade {
+  background: rgba(255, 77, 77, 0.15);
+  color: #ff4d4d;
+  border: 1px solid rgba(255, 77, 77, 0.3);
+}
+
+.actionBadge.maintain {
+  background: rgba(255, 165, 0, 0.15);
+  color: #ffa500;
+  border: 1px solid rgba(255, 165, 0, 0.3);
+}
+
+.gradeDetails {
+  display: flex;
+  align-items: center;
+}
+
+.gradeChange {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+}
+
+.previousGrade {
+  color: #888;
+  text-decoration: line-through;
+  font-weight: 500;
+}
+
+.arrow {
+  color: #8B5CF6;
+  font-weight: bold;
+}
+
+.newGrade {
+  color: #fff;
+  font-weight: 600;
+}
+
+.gradeStatic .grade {
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.gradesDisclaimer {
+  padding: 12px 16px;
+  background: rgba(139, 92, 246, 0.1);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: 8px;
+}
+
+.gradesDisclaimer p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #8B5CF6;
+  line-height: 1.4;
+}
+
+/* Mobile responsiveness for grades */
+@media (max-width: 768px) {
+  .analystGradesCard {
+    padding: 20px;
+    margin: 12px 0;
+  }
+
+  .gradeItem {
+    padding: 14px;
+  }
+
+  .gradeHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .gradeCompany {
+    font-size: 0.9rem;
+  }
+
+  .comparisonRow {
+    padding: 10px 12px;
+  }
+
+  .comparisonLabel, .comparisonValue {
+    gap: 2px;
+  }
+
+  .timeframe {
+    font-size: 0.85rem;
+  }
+
+  .targetPrice {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .comparisonRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .comparisonValue {
+    align-items: flex-start;
+  }
+
+  .gradeChange {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .arrow {
+    display: none;
+  }
 }

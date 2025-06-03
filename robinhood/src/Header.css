@@ -10,7 +10,7 @@
   padding: 0 32px;
   box-shadow: 0 2px 20px rgba(0, 0, 0, 0.8);
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(90, 197, 59, 0.1);
+  border-bottom: 1px solid rgba(139, 92, 246, 0.1);
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -28,7 +28,7 @@
 }
 
 .header__logo img {
-  filter: drop-shadow(0 0 8px rgba(90, 197, 59, 0.3));
+  filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.3));
 }
 
 .header__search {
@@ -52,8 +52,8 @@
 
 .header__searchContainer:focus-within {
   background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(90, 197, 59, 0.6);
-  box-shadow: 0 0 20px rgba(90, 197, 59, 0.2);
+  border-color: rgba(139, 92, 246, 0.6);
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
 }
 
 .searchIcon {
@@ -64,7 +64,7 @@
 }
 
 .header__searchContainer:focus-within .searchIcon {
-  color: #5AC53B;
+  color: #8B5CF6;
 }
 
 .header__searchContainer input {
@@ -92,7 +92,7 @@
   left: 0;
   right: 0;
   background: rgba(26, 26, 26, 0.95);
-  border: 1px solid rgba(90, 197, 59, 0.2);
+  border: 1px solid rgba(139, 92, 246, 0.2);
   border-radius: 16px;
   backdrop-filter: blur(20px);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
@@ -112,7 +112,7 @@
 }
 
 .header__searchResults::-webkit-scrollbar-thumb {
-  background: rgba(90, 197, 59, 0.6);
+  background: rgba(139, 92, 246, 0.6);
   border-radius: 3px;
 }
 
@@ -128,7 +128,7 @@
 }
 
 .header__searchResult:hover {
-  background: rgba(90, 197, 59, 0.1);
+  background: rgba(139, 92, 246, 0.1);
   transform: translateX(4px);
 }
 
@@ -152,7 +152,7 @@
   font-weight: 600;
   padding: 4px 8px;
   border-radius: 6px;
-  background: linear-gradient(45deg, #5AC53B, #4a9e2f);
+  background: linear-gradient(45deg, #8B5CF6, #3B82F6);
   color: white;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -196,8 +196,8 @@
   content: '';
   width: 20px;
   height: 20px;
-  border: 3px solid rgba(90, 197, 59, 0.3);
-  border-top-color: #5AC53B;
+  border: 3px solid rgba(139, 92, 246, 0.3);
+  border-top-color: #8B5CF6;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -228,40 +228,42 @@
 .header__menuItems a::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(90, 197, 59, 0.2), transparent);
-  transition: left 0.5s ease;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.2), transparent);
+  border-radius: 2px;
+  transition: width 0.3s ease;
 }
 
 .header__menuItems a:hover::before {
-  left: 100%;
+  width: 100%;
 }
 
 .header__menuItems a:hover {
-  color: #5AC53B;
-  background: rgba(90, 197, 59, 0.1);
+  color: #8B5CF6;
+  background: rgba(139, 92, 246, 0.1);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(90, 197, 59, 0.2);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
 }
 
 .freeCashButton {
-  background: linear-gradient(135deg, #5AC53B 0%, #4a9e2f 100%);
+  background: linear-gradient(135deg, #8B5CF6 0%, #3B82F6 100%);
   color: white;
   border: none;
   padding: 12px 24px;
-  border-radius: 10px;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
-  font-weight: 700;
-  font-size: 0.9rem;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(90, 197, 59, 0.3);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  text-decoration: none;
+  display: inline-block;
   position: relative;
   overflow: hidden;
+  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
 }
 
 .freeCashButton::before {
@@ -280,9 +282,9 @@
 }
 
 .freeCashButton:hover {
-  background: linear-gradient(135deg, #4a9e2f 0%, #3d8527 100%);
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(90, 197, 59, 0.4);
+  background: linear-gradient(135deg, #3B82F6 0%, #7C3AED 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
 }
 
 .freeCashButton:active {
@@ -300,27 +302,28 @@
 }
 
 .loginButton:hover {
-  color: #5AC53B;
-  border-color: rgba(90, 197, 59, 0.5);
-  background: rgba(90, 197, 59, 0.1);
+  color: #8B5CF6;
+  border-color: rgba(139, 92, 246, 0.5);
+  background: rgba(139, 92, 246, 0.1);
 }
 
 .signupButton {
-  background: linear-gradient(135deg, #5AC53B 0%, #4a9e2f 100%);
+  background: linear-gradient(135deg, #8B5CF6 0%, #3B82F6 100%);
   color: white;
-  text-decoration: none;
+  border: none;
   padding: 12px 24px;
-  border-radius: 10px;
-  font-weight: 700;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(90, 197, 59, 0.3);
-  border: 2px solid transparent;
+  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
 }
 
 .signupButton:hover {
-  background: linear-gradient(135deg, #4a9e2f 0%, #3d8527 100%);
+  background: linear-gradient(135deg, #3B82F6 0%, #7C3AED 100%);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(90, 197, 59, 0.4);
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
 }
 
 .logoutButton {
@@ -407,7 +410,7 @@
 .headerLogo {
   font-size: 1.5rem;
   font-weight: bold;
-  color: #5AC53B;
+  color: #8B5CF6;
   text-decoration: none;
 }
 
@@ -423,7 +426,7 @@
 }
 
 .headerNav a:hover {
-  color: #5AC53B;
+  color: #8B5CF6;
 }
 
 .headerRight {
@@ -433,7 +436,7 @@
 }
 
 a:first-of-type {
-  color: #5AC53B;
+  color: #8B5CF6;
 }
 
 .searchDropdown {
@@ -460,8 +463,8 @@ a:first-of-type {
 }
 
 .searchDropdown li:hover {
-  background: rgba(90, 197, 59, 0.1);
-  color: #5AC53B;
+  background: rgba(139, 92, 246, 0.1);
+  color: #8B5CF6;
 }
 
 .searchDropdown li:last-child {

@@ -125,7 +125,7 @@
 }
 
 .newsfeed__article__title a:hover {
-  color: #5AC53B;
+  color: #8B5CF6;
 }
 
 .newsfeed__article__summary {
@@ -260,5 +260,12 @@
 }
 
 .newsfeed__topmovers__card__numbers {
-  color: #66ff00;
+  color: #00C805;
+}
+
+.readMore {
+  color: #8B5CF6;
+  cursor: pointer;
+  text-decoration: underline;
+  font-weight: 500;
 }

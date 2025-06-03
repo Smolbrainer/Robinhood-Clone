@@ -51,9 +51,9 @@
 }
 
 .timeline button.active {
-  background: linear-gradient(135deg, #5AC53B 0%, #4a9e2f 100%);
-  border-color: #5AC53B;
-  box-shadow: 0 4px 12px rgba(90, 197, 59, 0.3);
+  background: linear-gradient(135deg, #8B5CF6 0%, #3B82F6 100%);
+  border-color: #8B5CF6;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
 }
 
 /* Mobile Responsiveness */
@@ -84,4 +84,10 @@
     padding: 12px;
     border-radius: 8px;
   }
+}
+
+.linegraph__prediction {
+  background: linear-gradient(135deg, #8B5CF6 0%, #3B82F6 100%);
+  border-color: #8B5CF6;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
 }
