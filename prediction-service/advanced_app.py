@@ -25,6 +25,18 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error
 import warnings
 warnings.filterwarnings('ignore')
 
+# Try to import advanced predictor, fallback to None if TensorFlow not available
+try:
+    from stock_predictor import StockPredictor
+    HAS_TENSORFLOW = True
+except ImportError:
+    print("TensorFlow not available, using simplified predictions only")
+    StockPredictor = None
+    HAS_TENSORFLOW = False
+
+from options_pricing import OptionsPricingEngine, STRATEGY_TEMPLATES
+import traceback
+
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -33,9 +45,109 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__)
 CORS(app)
 
-# Global cache for predictions
-CACHE = {}
-CACHE_DURATION = 24 * 60 * 60  # 24 hours in seconds
+# Initialize components
+if HAS_TENSORFLOW:
+    predictor = StockPredictor('AAPL')  # Default symbol, will be changed per request
+else:
+    predictor = None
+    
+options_engine = OptionsPricingEngine()
+
+# Cache for storing predictions and options data
+prediction_cache = {}
+options_cache = {}
+CACHE_DURATION = 3600  # 1 hour cache
+
+class SimpleFallbackPredictor:
+    """Simple fallback predictor when TensorFlow is not available"""
+    
+    def simple_prediction(self, symbol):
+        """Generate a simple prediction without TensorFlow"""
+        try:
+            # Fetch recent data
+            ticker = yf.Ticker(symbol)
+            data = ticker.history(period="1y")
+            
+            if data.empty:
+                return None
+                
+            current_price = float(data['Close'].iloc[-1])
+            
+            # Calculate simple moving averages and trends
+            data['SMA_50'] = data['Close'].rolling(50).mean()
+            data['SMA_200'] = data['Close'].rolling(200).mean()
+            data['Returns'] = data['Close'].pct_change()
+            
+            # Simple trend analysis
+            recent_trend = data['Returns'].tail(20).mean()
+            volatility = data['Returns'].tail(60).std()
+            
+            # Generate simple prediction (moving average trend)
+            if current_price > data['SMA_50'].iloc[-1] and data['SMA_50'].iloc[-1] > data['SMA_200'].iloc[-1]:
+                trend_multiplier = 1.1  # Bullish
+            elif current_price < data['SMA_50'].iloc[-1] and data['SMA_50'].iloc[-1] < data['SMA_200'].iloc[-1]:
+                trend_multiplier = 0.95  # Bearish
+            else:
+                trend_multiplier = 1.02  # Neutral
+            
+            # Generate simple future predictions
+            predictions = []
+            dates = []
+            current_date = datetime.now()
+            
+            for i in range(365):
+                # Simple price walk with trend
+                days_ahead = i + 1
+                trend_factor = (trend_multiplier ** (days_ahead / 365))
+                noise = np.random.normal(0, volatility * 0.1)  # Small random noise
+                predicted_price = current_price * trend_factor * (1 + noise)
+                
+                predictions.append(float(predicted_price))
+                
+                # Generate business day
+                next_date = current_date + timedelta(days=i+1)
+                if next_date.weekday() < 5:  # Monday = 0, Friday = 4
+                    dates.append(next_date.strftime('%Y-%m-%d'))
+                
+                if len(dates) >= 365:
+                    break
+            
+            # Calculate return metrics
+            predicted_1y = predictions[-1] if predictions else current_price
+            predicted_return = (predicted_1y - current_price) / current_price
+            
+            # Determine trend
+            if predicted_return > 0.15:
+                trend = "bullish"
+            elif predicted_return < -0.15:
+                trend = "bearish"
+            else:
+                trend = "neutral"
+            
+            return {
+                'symbol': symbol,
+                'current_price': current_price,
+                'predicted_1y_price': predicted_1y,
+                'predicted_return': predicted_return,
+                'trend': trend,
+                'confidence_score': 75.0,  # Moderate confidence for simple prediction
+                'predictions': predictions[:365],
+                'dates': dates[:365],
+                'technical_indicators': {
+                    'sma_50': float(data['SMA_50'].iloc[-1]) if not pd.isna(data['SMA_50'].iloc[-1]) else None,
+                    'sma_200': float(data['SMA_200'].iloc[-1]) if not pd.isna(data['SMA_200'].iloc[-1]) else None,
+                    'volatility': float(volatility),
+                    'recent_trend': float(recent_trend)
+                },
+                'model_type': 'simple_fallback'
+            }
+            
+        except Exception as e:
+            logger.error(f"Error in simple prediction for {symbol}: {e}")
+            return None
+
+# Initialize fallback predictor
+fallback_predictor = SimpleFallbackPredictor()
 
 class AdvancedStockPredictor:
     def __init__(self):
@@ -304,17 +416,20 @@ def predict_stock(symbol):
     """Advanced prediction endpoint"""
     try:
         symbol = symbol.upper()
-        cache_key = f"advanced_{symbol}"
         
-        # Check cache
-        if cache_key in CACHE:
-            cache_data = CACHE[cache_key]
-            if time.time() - cache_data['timestamp'] < CACHE_DURATION:
+        # Check cache first
+        cache_key = f"prediction_{symbol}"
+        current_time = time.time()
+        
+        if cache_key in prediction_cache:
+            cached_data, timestamp = prediction_cache[cache_key]
+            if current_time - timestamp < CACHE_DURATION:
                 logger.info(f"Returning cached prediction for {symbol}")
                 return jsonify({
                     'success': True,
                     'cached': True,
-                    'data': cache_data['data']
+                    'data': cached_data,
+                    'source': 'cache'
                 })
         
         # Generate new prediction
@@ -323,11 +438,8 @@ def predict_stock(symbol):
         
         prediction_data = predictor.train_and_predict(symbol)
         
-        # Cache result
-        CACHE[cache_key] = {
-            'data': prediction_data,
-            'timestamp': time.time()
-        }
+        # Cache the result
+        prediction_cache[cache_key] = (prediction_data, current_time)
         
         end_time = time.time()
         logger.info(f"Advanced prediction for {symbol} completed in {end_time - start_time:.2f} seconds")
@@ -336,31 +448,57 @@ def predict_stock(symbol):
             'success': True,
             'cached': False,
             'data': prediction_data,
-            'processing_time': round(end_time - start_time, 2)
+            'processing_time': round(end_time - start_time, 2),
+            'source': 'fresh'
         })
         
     except Exception as e:
         logger.error(f"Prediction error for {symbol}: {e}")
         return jsonify({
             'success': False,
-            'error': str(e)
+            'error': str(e),
+            'traceback': traceback.format_exc()
         }), 500
 
-@app.route('/cache/status', methods=['GET'])
-def cache_status():
-    """Get cache status"""
-    return jsonify({
-        'cached_symbols': list(CACHE.keys()),
-        'cache_count': len(CACHE),
-        'cache_duration_hours': CACHE_DURATION / 3600
-    })
-
-@app.route('/cache/clear', methods=['POST'])
-def clear_cache():
-    """Clear prediction cache"""
-    global CACHE
-    CACHE.clear()
-    return jsonify({'message': 'Cache cleared successfully'})
+@app.route('/predict-simple/<symbol>', methods=['GET'])
+def predict_simple(symbol):
+    try:
+        symbol = symbol.upper()
+        
+        # Check cache first
+        cache_key = f"simple_{symbol}"
+        current_time = time.time()
+        
+        if cache_key in prediction_cache:
+            cached_data, timestamp = prediction_cache[cache_key]
+            if current_time - timestamp < CACHE_DURATION:
+                return jsonify({
+                    'success': True,
+                    'cached': True,
+                    'data': cached_data,
+                    'source': 'cache'
+                })
+        
+        # Use appropriate predictor
+        if HAS_TENSORFLOW and predictor:
+            result = predictor.simple_prediction(symbol)
+        else:
+            result = fallback_predictor.simple_prediction(symbol)
+        
+        if result:
+            # Cache the result
+            prediction_cache[cache_key] = (result, current_time)
+            return jsonify({
+                'success': True,
+                'cached': False,
+                'data': result,
+                'source': 'fresh'
+            })
+        else:
+            return jsonify({'success': False, 'error': 'Unable to generate simple prediction'}), 500
+            
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 @app.route('/predict-batch', methods=['POST'])
 def predict_batch():
@@ -370,45 +508,247 @@ def predict_batch():
         symbols = data.get('symbols', [])
         
         if not symbols:
-            return jsonify({'error': 'No symbols provided'}), 400
+            return jsonify({'success': False, 'error': 'No symbols provided'}), 400
         
         results = {}
         for symbol in symbols:
             try:
                 symbol = symbol.upper()
-                prediction_data = predictor.train_and_predict(symbol)
-                results[symbol] = {
-                    'success': True,
-                    'data': prediction_data
-                }
+                result = predictor.simple_prediction(symbol)
+                results[symbol] = result
             except Exception as e:
-                results[symbol] = {
-                    'success': False,
-                    'error': str(e)
-                }
+                results[symbol] = {'error': str(e)}
         
-        return jsonify(results)
+        return jsonify({'success': True, 'data': results})
         
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+# ==================== OPTIONS ENDPOINTS ====================
+
+@app.route('/options-chain/<symbol>', methods=['GET'])
+def get_options_chain(symbol):
+    """Get complete options chain for a symbol"""
+    try:
+        symbol = symbol.upper()
+        
+        # Check cache first
+        cache_key = f"options_{symbol}"
+        current_time = time.time()
+        
+        if cache_key in options_cache:
+            cached_data, timestamp = options_cache[cache_key]
+            if current_time - timestamp < CACHE_DURATION:
+                return jsonify({
+                    'success': True,
+                    'cached': True,
+                    'data': cached_data,
+                    'source': 'cache'
+                })
+        
+        # Fetch fresh options data
+        options_data = options_engine.get_yahoo_options_data(symbol)
+        
+        if options_data:
+            # Cache the result
+            options_cache[cache_key] = (options_data, current_time)
+            return jsonify({
+                'success': True,
+                'cached': False,
+                'data': options_data,
+                'source': 'fresh'
+            })
+        else:
+            return jsonify({'success': False, 'error': f'No options data available for {symbol}'}), 500
+            
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e), 'traceback': traceback.format_exc()}), 500
+
+@app.route('/options-pricing/<symbol>', methods=['GET'])
+def calculate_options_pricing(symbol):
+    """Calculate theoretical options prices using Black-Scholes"""
+    try:
+        symbol = symbol.upper()
+        strike = float(request.args.get('strike', 100))
+        expiration = request.args.get('expiration', '2025-07-18')
+        option_type = request.args.get('type', 'call').lower()
+        
+        # Get current stock price
+        options_data = options_engine.get_yahoo_options_data(symbol)
+        if not options_data:
+            return jsonify({'success': False, 'error': 'Unable to fetch stock data'}), 500
+        
+        current_price = options_data['currentPrice']
+        
+        # Calculate time to expiration
+        exp_date = datetime.strptime(expiration, '%Y-%m-%d')
+        time_to_exp = (exp_date - datetime.now()).days / 365.0
+        
+        if time_to_exp <= 0:
+            return jsonify({'success': False, 'error': 'Option has expired'}), 400
+        
+        # Calculate theoretical price and Greeks
+        if option_type == 'call':
+            theoretical_price = options_engine.black_scholes_call(
+                current_price, strike, time_to_exp, options_engine.risk_free_rate, 0.25
+            )
+        else:
+            theoretical_price = options_engine.black_scholes_put(
+                current_price, strike, time_to_exp, options_engine.risk_free_rate, 0.25
+            )
+        
+        greeks = options_engine.calculate_greeks(
+            current_price, strike, time_to_exp, options_engine.risk_free_rate, 0.25, option_type
+        )
+        
+        result = {
+            'symbol': symbol,
+            'currentPrice': current_price,
+            'strike': strike,
+            'expiration': expiration,
+            'type': option_type,
+            'theoreticalPrice': round(theoretical_price, 2),
+            'timeToExpiration': time_to_exp,
+            'greeks': greeks
+        }
+        
+        return jsonify({'success': True, 'data': result})
+        
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/options-strategy-analysis', methods=['POST'])
+def analyze_options_strategy():
+    """Analyze complex options strategies"""
+    try:
+        data = request.get_json()
+        strategy_legs = data.get('legs', [])
+        current_price = float(data.get('currentPrice', 100))
+        
+        if not strategy_legs:
+            return jsonify({'success': False, 'error': 'No strategy legs provided'}), 400
+        
+        # Analyze the strategy
+        analysis = options_engine.analyze_strategy(strategy_legs, current_price)
+        
+        return jsonify({'success': True, 'data': analysis})
+        
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e), 'traceback': traceback.format_exc()}), 500
+
+@app.route('/options-strategies', methods=['GET'])
+def get_strategy_templates():
+    """Get predefined options strategy templates"""
+    try:
+        return jsonify({'success': True, 'data': STRATEGY_TEMPLATES})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/options-implied-volatility', methods=['POST'])
+def calculate_implied_volatility():
+    """Calculate implied volatility for an option"""
+    try:
+        data = request.get_json()
+        market_price = float(data.get('marketPrice'))
+        current_price = float(data.get('currentPrice'))
+        strike = float(data.get('strike'))
+        expiration = data.get('expiration')
+        option_type = data.get('type', 'call').lower()
+        
+        # Calculate time to expiration
+        exp_date = datetime.strptime(expiration, '%Y-%m-%d')
+        time_to_exp = (exp_date - datetime.now()).days / 365.0
+        
+        if time_to_exp <= 0:
+            return jsonify({'success': False, 'error': 'Option has expired'}), 400
+        
+        # Calculate implied volatility
+        iv = options_engine.implied_volatility(
+            market_price, current_price, strike, time_to_exp, 
+            options_engine.risk_free_rate, option_type
+        )
+        
+        result = {
+            'impliedVolatility': iv,
+            'marketPrice': market_price,
+            'strike': strike,
+            'type': option_type,
+            'timeToExpiration': time_to_exp
+        }
+        
+        return jsonify({'success': True, 'data': result})
+        
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/options-payoff', methods=['POST'])
+def calculate_payoff_diagram():
+    """Calculate payoff diagram for options strategy"""
+    try:
+        data = request.get_json()
+        strategy_legs = data.get('legs', [])
+        current_price = float(data.get('currentPrice', 100))
+        
+        # Create spot price range
+        spot_range = list(range(
+            int(current_price * 0.7), 
+            int(current_price * 1.3), 
+            int(current_price * 0.01)
+        ))
+        
+        # Calculate payoffs
+        payoffs = options_engine.calculate_strategy_payoff(strategy_legs, spot_range)
+        
+        result = {
+            'spotPrices': spot_range,
+            'payoffs': payoffs,
+            'currentPrice': current_price
+        }
+        
+        return jsonify({'success': True, 'data': result})
+        
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+# ==================== CACHE MANAGEMENT ====================
+
+@app.route('/cache/status', methods=['GET'])
+def cache_status():
+    prediction_count = len(prediction_cache)
+    options_count = len(options_cache)
+    
+    return jsonify({
+        'prediction_cache_size': prediction_count,
+        'options_cache_size': options_count,
+        'cache_duration_seconds': CACHE_DURATION
+    })
+
+@app.route('/cache/clear', methods=['POST'])
+def clear_cache():
+    global prediction_cache, options_cache
+    prediction_cache = {}
+    options_cache = {}
+    return jsonify({'success': True, 'message': 'All caches cleared'})
+
+@app.route('/cache/clear-predictions', methods=['POST'])
+def clear_prediction_cache():
+    global prediction_cache
+    prediction_cache = {}
+    return jsonify({'success': True, 'message': 'Prediction cache cleared'})
+
+@app.route('/cache/clear-options', methods=['POST'])
+def clear_options_cache():
+    global options_cache
+    options_cache = {}
+    return jsonify({'success': True, 'message': 'Options cache cleared'})
 
 if __name__ == '__main__':
-    print("🚀 Starting Advanced Stock Prediction API...")
-    print("🌐 Server running at: http://localhost:5000")
-    print("📊 Features:")
-    print("  • Random Forest machine learning model")
-    print("  • 25+ advanced technical indicators")
-    print("  • Bollinger Bands, RSI, MACD, Stochastic")
-    print("  • Volume analysis and momentum indicators")
-    print("  • Model accuracy scoring")
-    print("  • 1-year detailed forecasting")
-    print("  • Confidence intervals")
-    print("  • Real-time caching")
-    print()
-    print("🧪 Test endpoints:")
-    print("  • Health: http://localhost:5000/health")
-    print("  • Predict: http://localhost:5000/predict/AAPL")
-    print("  • Cache: http://localhost:5000/cache/status")
-    print()
-    
-    app.run(host='0.0.0.0', port=5000, debug=True) 
+    print("🤖 Starting TradeSmart AI Prediction Service with Options Trading...")
+    print("📊 Available endpoints:")
+    print("   - Stock Predictions: /predict/<symbol>")
+    print("   - Options Chains: /options-chain/<symbol>")
+    print("   - Options Pricing: /options-pricing/<symbol>")
+    print("   - Strategy Analysis: /options-strategy-analysis")
+    print("   - Payoff Diagrams: /options-payoff")
+    print("🚀 Server running on http://localhost:5000")
+    app.run(debug=True, host='0.0.0.0', port=5000) 
